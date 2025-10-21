@@ -1,0 +1,81 @@
+syntax = "proto3";
+package routes;
+
+option go_package = "./;routes";
+// Topic list
+message ROSTopicListRequest {}
+
+message ROSTopicListResponse {
+  repeated TopicMessageTypes data = 1;
+}
+
+message TopicMessageTypes {
+  string topic = 1;
+  repeated string types = 2;
+}
+
+// Subscribe to topic request
+message SubscribeRequest {
+  string topic_name = 1;
+}
+
+// Compressed Image message
+message CompressedImageResponse {
+  string format = 1;
+  bytes data = 2;
+}
+
+// Joint state message
+message Time {
+  int32  sec     = 1;
+  uint32 nanosec = 2;
+}
+
+message Header {
+  Time   stamp    = 1;
+  string frame_id = 2;
+}
+
+
+message JointStateResponse {
+  Header        header   = 1;
+  repeated string name    = 2;
+  repeated double position = 3;
+  repeated double velocity = 4;
+  repeated double effort   = 5;
+}
+
+// Multi array message
+message MultiArrayDimension {
+  string label = 1;
+  uint32 size  = 2;
+  uint32 stride = 3;
+}
+
+message MultiArrayLayout {
+  repeated MultiArrayDimension dim = 1;
+  uint32 data_offset = 2;
+}
+
+message Float64MultiArray {
+  MultiArrayLayout layout = 1;
+  repeated double data = 2;
+}
+
+message JointCommandRequest {
+  string topic_name = 1;
+  Float64MultiArray payload = 2;
+}
+
+message UploadResponse {
+  uint64 received_count = 1;
+}
+
+service ROSInterface {
+  rpc TopicList(ROSTopicListRequest) returns (ROSTopicListResponse) {};
+  rpc StreamCompressedImage(SubscribeRequest) returns (stream CompressedImageResponse);
+  rpc StreamJointStates(SubscribeRequest) returns (stream JointStateResponse);
+  rpc UploadJointCommands(stream JointCommandRequest) returns (UploadResponse);
+}
+
+
