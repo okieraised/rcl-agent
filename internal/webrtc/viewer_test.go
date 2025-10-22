@@ -11,7 +11,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/okieraised/monitoring-agent/internal/config"
 	"github.com/okieraised/monitoring-agent/internal/infrastructure/mqtt_client"
-	"github.com/okieraised/rclgo/humble"
+	"github.com/okieraised/rclgo/jazzy"
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/assert"
 )
@@ -32,10 +32,10 @@ func TestNewWebRTCViewer(t *testing.T) {
 	ctx, cancel := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 	defer cancel()
 
-	err = humble.Init(nil)
+	err = jazzy.Init(nil)
 	assert.NoError(t, err)
 
-	defer humble.Deinit()
+	defer jazzy.Deinit()
 
 	c, err := NewWebRTCDaemon(ctx)
 	if err != nil {

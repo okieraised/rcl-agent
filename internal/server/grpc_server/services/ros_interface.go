@@ -11,7 +11,7 @@ import (
 	sensor_msgs_msg "github.com/okieraised/monitoring-agent/internal/ros_msgs/sensor_msgs/msg"
 	std_msgs_msg "github.com/okieraised/monitoring-agent/internal/ros_msgs/std_msgs/msg"
 	"github.com/okieraised/monitoring-agent/internal/server/grpc_server/routes"
-	"github.com/okieraised/rclgo/humble"
+	"github.com/okieraised/rclgo/jazzy"
 	"github.com/pkg/errors"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
@@ -66,7 +66,7 @@ func (s *ROSInterfaceService) StreamCompressedImage(in *routes.SubscribeRequest,
 		ros_node.Node(),
 		in.TopicName,
 		nil,
-		func(msg *sensor_msgs_msg.CompressedImage, info *humble.MessageInfo, err error) {
+		func(msg *sensor_msgs_msg.CompressedImage, info *jazzy.MessageInfo, err error) {
 			if err != nil {
 				log.Default().Error(fmt.Sprintf("failed to subscribe: %v", err))
 				return
@@ -95,12 +95,12 @@ func (s *ROSInterfaceService) StreamCompressedImage(in *routes.SubscribeRequest,
 		}
 	}(sub)
 
-	ws, err := humble.NewWaitSet()
+	ws, err := jazzy.NewWaitSet()
 	if err != nil {
 		wErr := errors.Wrapf(err, "failed to waitset to topic [%s]", in.TopicName)
 		return status.Errorf(codes.Internal, wErr.Error())
 	}
-	defer func(ws *humble.WaitSet) {
+	defer func(ws *jazzy.WaitSet) {
 		cErr := ws.Close()
 		if cErr != nil && err == nil {
 			log.Default().Error(fmt.Sprintf("failed to close waitset: %v", cErr))
@@ -142,7 +142,7 @@ func (s *ROSInterfaceService) StreamJointStates(in *routes.SubscribeRequest, str
 		ros_node.Node(),
 		in.TopicName,
 		nil,
-		func(msg *sensor_msgs_msg.JointState, info *humble.MessageInfo, err error) {
+		func(msg *sensor_msgs_msg.JointState, info *jazzy.MessageInfo, err error) {
 			if err != nil {
 				log.Default().Error(fmt.Sprintf("failed to subscribe: %v", err))
 				return
@@ -185,12 +185,12 @@ func (s *ROSInterfaceService) StreamJointStates(in *routes.SubscribeRequest, str
 		}
 	}(sub)
 
-	ws, err := humble.NewWaitSet()
+	ws, err := jazzy.NewWaitSet()
 	if err != nil {
 		wErr := errors.Wrapf(err, "failed to waitset to topic [%s]", in.TopicName)
 		return status.Errorf(codes.Internal, wErr.Error())
 	}
-	defer func(ws *humble.WaitSet) {
+	defer func(ws *jazzy.WaitSet) {
 		cErr := ws.Close()
 		if cErr != nil && err == nil {
 			log.Default().Error(fmt.Sprintf("failed to close waitset: %v", cErr))

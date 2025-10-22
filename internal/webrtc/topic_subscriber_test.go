@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"github.com/okieraised/monitoring-agent/internal/infrastructure/log"
-	"github.com/okieraised/rclgo/humble"
+	"github.com/okieraised/rclgo/jazzy"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -17,10 +17,10 @@ func TestNewCameraStreamer(t *testing.T) {
 	err := log.InitDefault()
 	assert.NoError(t, err)
 
-	err = humble.Init(nil)
+	err = jazzy.Init(nil)
 	assert.NoError(t, err)
 	defer func() {
-		cErr := humble.Deinit()
+		cErr := jazzy.Deinit()
 		if cErr != nil && err == nil {
 			err = cErr
 		}
@@ -50,7 +50,7 @@ func TestNewCameraStreamer(t *testing.T) {
 		}
 	}()
 
-	node, err := humble.NewNode("test", "")
+	node, err := jazzy.NewNode("test", "")
 	assert.NoError(t, err)
 	defer node.Close()
 

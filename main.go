@@ -32,7 +32,7 @@ import (
 	"github.com/okieraised/monitoring-agent/internal/server/rest_server/services/v1/ws"
 	"github.com/okieraised/monitoring-agent/internal/signaling"
 	"github.com/okieraised/monitoring-agent/internal/webrtc"
-	"github.com/okieraised/rclgo/humble"
+	"github.com/okieraised/rclgo/jazzy"
 	"github.com/pkg/errors"
 	"github.com/spf13/viper"
 	"golang.org/x/sync/errgroup"
@@ -227,13 +227,13 @@ func main() {
 	defer signal.Stop(sigCh)
 
 	// Init ROS
-	err := humble.Init(nil)
+	err := jazzy.Init(nil)
 	if err != nil {
 		log.Default().Fatal(fmt.Sprintf("Failed to initialize ROS client: %v", err))
 		return
 	}
 	defer func() {
-		cErr := humble.Deinit()
+		cErr := jazzy.Deinit()
 		if cErr != nil && err == nil {
 			err = cErr
 		}
@@ -245,7 +245,7 @@ func main() {
 		log.Default().Fatal(fmt.Sprintf("Failed to initialize ROS client: %v", err))
 		return
 	}
-	defer func(node *humble.Node) {
+	defer func(node *jazzy.Node) {
 		cErr := node.Close()
 		if cErr != nil && err == nil {
 			err = cErr

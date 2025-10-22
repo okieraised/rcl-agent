@@ -8,7 +8,7 @@ import (
 	"github.com/okieraised/monitoring-agent/internal/infrastructure/log"
 	sensor_msgs_msg "github.com/okieraised/monitoring-agent/internal/ros_msgs/sensor_msgs/msg"
 	"github.com/okieraised/monitoring-agent/internal/utilities"
-	"github.com/okieraised/rclgo/humble"
+	"github.com/okieraised/rclgo/jazzy"
 )
 
 const (
@@ -21,7 +21,7 @@ var supportedTopicMsgTypes = map[string]struct{}{
 	CompressedImageMessageType: {},
 }
 
-func newCameraSubscriber(ctx context.Context, node *humble.Node, topicName string, frameCh chan<- []byte, enableCh <-chan bool) error {
+func newCameraSubscriber(ctx context.Context, node *jazzy.Node, topicName string, frameCh chan<- []byte, enableCh <-chan bool) error {
 	log.Default().Info(fmt.Sprintf("Started initializing new [%s] subscriber", topicName))
 	var enabled atomic.Bool
 
@@ -65,7 +65,7 @@ func newCameraSubscriber(ctx context.Context, node *humble.Node, topicName strin
 		return wErr
 	}
 
-	ws, err := humble.NewWaitSet()
+	ws, err := jazzy.NewWaitSet()
 	if err != nil {
 		return fmt.Errorf("failed to create waitset: %w", err)
 	}
@@ -84,7 +84,7 @@ func newCameraSubscriber(ctx context.Context, node *humble.Node, topicName strin
 			node,
 			topicName,
 			nil,
-			func(msg *sensor_msgs_msg.CompressedImage, info *humble.MessageInfo, cbErr error) {
+			func(msg *sensor_msgs_msg.CompressedImage, info *jazzy.MessageInfo, cbErr error) {
 				select {
 				case <-ctx.Done():
 					return
@@ -121,7 +121,7 @@ func newCameraSubscriber(ctx context.Context, node *humble.Node, topicName strin
 			node,
 			topicName,
 			nil,
-			func(msg *sensor_msgs_msg.Image, info *humble.MessageInfo, cbErr error) {
+			func(msg *sensor_msgs_msg.Image, info *jazzy.MessageInfo, cbErr error) {
 				select {
 				case <-ctx.Done():
 					return
