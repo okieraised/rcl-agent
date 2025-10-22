@@ -21,7 +21,7 @@ func init() {
 	humble.RegisterService("as2_msgs/srv/PathToGeopath", PathToGeopathTypeSupport)
 }
 
-type _PathToGeopathTypeSupport struct{}
+type _PathToGeopathTypeSupport struct {}
 
 func (s _PathToGeopathTypeSupport) Request() humble.MessageTypeSupport {
 	return PathToGeopath_RequestTypeSupport
@@ -87,7 +87,7 @@ type PathToGeopathService struct {
 func NewPathToGeopathService(node *humble.Node, name string, options *humble.ServiceOptions, handler PathToGeopathServiceRequestHandler) (*PathToGeopathService, error) {
 	h := func(rmw *humble.ServiceInfo, msg humble.Message, rs humble.ServiceResponseSender) {
 		m := msg.(*PathToGeopath_Request)
-		responseSender := PathToGeopathServiceResponseSender{sender: rs}
+		responseSender := PathToGeopathServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, PathToGeopathTypeSupport, options, h)

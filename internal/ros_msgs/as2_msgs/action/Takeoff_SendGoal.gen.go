@@ -21,7 +21,7 @@ func init() {
 	humble.RegisterService("as2_msgs/action/Takeoff_SendGoal", Takeoff_SendGoalTypeSupport)
 }
 
-type _Takeoff_SendGoalTypeSupport struct{}
+type _Takeoff_SendGoalTypeSupport struct {}
 
 func (s _Takeoff_SendGoalTypeSupport) Request() humble.MessageTypeSupport {
 	return Takeoff_SendGoal_RequestTypeSupport
@@ -87,7 +87,7 @@ type Takeoff_SendGoalService struct {
 func NewTakeoff_SendGoalService(node *humble.Node, name string, options *humble.ServiceOptions, handler Takeoff_SendGoalServiceRequestHandler) (*Takeoff_SendGoalService, error) {
 	h := func(rmw *humble.ServiceInfo, msg humble.Message, rs humble.ServiceResponseSender) {
 		m := msg.(*Takeoff_SendGoal_Request)
-		responseSender := Takeoff_SendGoalServiceResponseSender{sender: rs}
+		responseSender := Takeoff_SendGoalServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, Takeoff_SendGoalTypeSupport, options, h)

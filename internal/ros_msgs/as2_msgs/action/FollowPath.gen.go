@@ -24,7 +24,7 @@ func init() {
 	humble.RegisterAction("as2_msgs/action/FollowPath", FollowPathTypeSupport)
 }
 
-type _FollowPathTypeSupport struct{}
+type _FollowPathTypeSupport struct {}
 
 func (s _FollowPathTypeSupport) Goal() humble.MessageTypeSupport {
 	return FollowPath_GoalTypeSupport
@@ -100,7 +100,7 @@ func (s *FollowPathFeedbackSender) Send(msg *FollowPath_Feedback) error {
 	return s.sender.Send(msg)
 }
 
-type FollowPathGoalHandle struct {
+type FollowPathGoalHandle struct{
 	*humble.GoalHandle
 
 	Description *FollowPath_Goal
@@ -147,7 +147,7 @@ func (a _FollowPathAction) TypeSupport() humble.ActionTypeSupport {
 	return FollowPathTypeSupport
 }
 
-type FollowPathServer struct {
+type FollowPathServer struct{
 	*humble.ActionServer
 }
 
@@ -163,7 +163,7 @@ type FollowPathFeedbackHandler func(context.Context, *FollowPath_FeedbackMessage
 
 type FollowPathStatusHandler func(context.Context, *action_msgs_msg.GoalStatus)
 
-type FollowPathClient struct {
+type FollowPathClient struct{
 	*humble.ActionClient
 }
 

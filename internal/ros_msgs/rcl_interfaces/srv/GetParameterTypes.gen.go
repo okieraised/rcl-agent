@@ -21,7 +21,7 @@ func init() {
 	humble.RegisterService("rcl_interfaces/srv/GetParameterTypes", GetParameterTypesTypeSupport)
 }
 
-type _GetParameterTypesTypeSupport struct{}
+type _GetParameterTypesTypeSupport struct {}
 
 func (s _GetParameterTypesTypeSupport) Request() humble.MessageTypeSupport {
 	return GetParameterTypes_RequestTypeSupport
@@ -87,7 +87,7 @@ type GetParameterTypesService struct {
 func NewGetParameterTypesService(node *humble.Node, name string, options *humble.ServiceOptions, handler GetParameterTypesServiceRequestHandler) (*GetParameterTypesService, error) {
 	h := func(rmw *humble.ServiceInfo, msg humble.Message, rs humble.ServiceResponseSender) {
 		m := msg.(*GetParameterTypes_Request)
-		responseSender := GetParameterTypesServiceResponseSender{sender: rs}
+		responseSender := GetParameterTypesServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, GetParameterTypesTypeSupport, options, h)

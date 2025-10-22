@@ -24,7 +24,7 @@ func init() {
 	humble.RegisterAction("as2_msgs/action/SwarmFlocking", SwarmFlockingTypeSupport)
 }
 
-type _SwarmFlockingTypeSupport struct{}
+type _SwarmFlockingTypeSupport struct {}
 
 func (s _SwarmFlockingTypeSupport) Goal() humble.MessageTypeSupport {
 	return SwarmFlocking_GoalTypeSupport
@@ -100,7 +100,7 @@ func (s *SwarmFlockingFeedbackSender) Send(msg *SwarmFlocking_Feedback) error {
 	return s.sender.Send(msg)
 }
 
-type SwarmFlockingGoalHandle struct {
+type SwarmFlockingGoalHandle struct{
 	*humble.GoalHandle
 
 	Description *SwarmFlocking_Goal
@@ -147,7 +147,7 @@ func (a _SwarmFlockingAction) TypeSupport() humble.ActionTypeSupport {
 	return SwarmFlockingTypeSupport
 }
 
-type SwarmFlockingServer struct {
+type SwarmFlockingServer struct{
 	*humble.ActionServer
 }
 
@@ -163,7 +163,7 @@ type SwarmFlockingFeedbackHandler func(context.Context, *SwarmFlocking_FeedbackM
 
 type SwarmFlockingStatusHandler func(context.Context, *action_msgs_msg.GoalStatus)
 
-type SwarmFlockingClient struct {
+type SwarmFlockingClient struct{
 	*humble.ActionClient
 }
 

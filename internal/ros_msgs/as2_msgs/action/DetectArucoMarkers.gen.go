@@ -24,7 +24,7 @@ func init() {
 	humble.RegisterAction("as2_msgs/action/DetectArucoMarkers", DetectArucoMarkersTypeSupport)
 }
 
-type _DetectArucoMarkersTypeSupport struct{}
+type _DetectArucoMarkersTypeSupport struct {}
 
 func (s _DetectArucoMarkersTypeSupport) Goal() humble.MessageTypeSupport {
 	return DetectArucoMarkers_GoalTypeSupport
@@ -100,7 +100,7 @@ func (s *DetectArucoMarkersFeedbackSender) Send(msg *DetectArucoMarkers_Feedback
 	return s.sender.Send(msg)
 }
 
-type DetectArucoMarkersGoalHandle struct {
+type DetectArucoMarkersGoalHandle struct{
 	*humble.GoalHandle
 
 	Description *DetectArucoMarkers_Goal
@@ -147,7 +147,7 @@ func (a _DetectArucoMarkersAction) TypeSupport() humble.ActionTypeSupport {
 	return DetectArucoMarkersTypeSupport
 }
 
-type DetectArucoMarkersServer struct {
+type DetectArucoMarkersServer struct{
 	*humble.ActionServer
 }
 
@@ -163,7 +163,7 @@ type DetectArucoMarkersFeedbackHandler func(context.Context, *DetectArucoMarkers
 
 type DetectArucoMarkersStatusHandler func(context.Context, *action_msgs_msg.GoalStatus)
 
-type DetectArucoMarkersClient struct {
+type DetectArucoMarkersClient struct{
 	*humble.ActionClient
 }
 

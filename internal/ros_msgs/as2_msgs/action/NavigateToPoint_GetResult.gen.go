@@ -21,7 +21,7 @@ func init() {
 	humble.RegisterService("as2_msgs/action/NavigateToPoint_GetResult", NavigateToPoint_GetResultTypeSupport)
 }
 
-type _NavigateToPoint_GetResultTypeSupport struct{}
+type _NavigateToPoint_GetResultTypeSupport struct {}
 
 func (s _NavigateToPoint_GetResultTypeSupport) Request() humble.MessageTypeSupport {
 	return NavigateToPoint_GetResult_RequestTypeSupport
@@ -87,7 +87,7 @@ type NavigateToPoint_GetResultService struct {
 func NewNavigateToPoint_GetResultService(node *humble.Node, name string, options *humble.ServiceOptions, handler NavigateToPoint_GetResultServiceRequestHandler) (*NavigateToPoint_GetResultService, error) {
 	h := func(rmw *humble.ServiceInfo, msg humble.Message, rs humble.ServiceResponseSender) {
 		m := msg.(*NavigateToPoint_GetResult_Request)
-		responseSender := NavigateToPoint_GetResultServiceResponseSender{sender: rs}
+		responseSender := NavigateToPoint_GetResultServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, NavigateToPoint_GetResultTypeSupport, options, h)

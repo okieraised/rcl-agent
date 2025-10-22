@@ -24,7 +24,7 @@ func init() {
 	humble.RegisterAction("as2_msgs/action/Takeoff", TakeoffTypeSupport)
 }
 
-type _TakeoffTypeSupport struct{}
+type _TakeoffTypeSupport struct {}
 
 func (s _TakeoffTypeSupport) Goal() humble.MessageTypeSupport {
 	return Takeoff_GoalTypeSupport
@@ -100,7 +100,7 @@ func (s *TakeoffFeedbackSender) Send(msg *Takeoff_Feedback) error {
 	return s.sender.Send(msg)
 }
 
-type TakeoffGoalHandle struct {
+type TakeoffGoalHandle struct{
 	*humble.GoalHandle
 
 	Description *Takeoff_Goal
@@ -147,7 +147,7 @@ func (a _TakeoffAction) TypeSupport() humble.ActionTypeSupport {
 	return TakeoffTypeSupport
 }
 
-type TakeoffServer struct {
+type TakeoffServer struct{
 	*humble.ActionServer
 }
 
@@ -163,7 +163,7 @@ type TakeoffFeedbackHandler func(context.Context, *Takeoff_FeedbackMessage)
 
 type TakeoffStatusHandler func(context.Context, *action_msgs_msg.GoalStatus)
 
-type TakeoffClient struct {
+type TakeoffClient struct{
 	*humble.ActionClient
 }
 

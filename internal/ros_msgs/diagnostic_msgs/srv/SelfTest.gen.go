@@ -21,7 +21,7 @@ func init() {
 	humble.RegisterService("diagnostic_msgs/srv/SelfTest", SelfTestTypeSupport)
 }
 
-type _SelfTestTypeSupport struct{}
+type _SelfTestTypeSupport struct {}
 
 func (s _SelfTestTypeSupport) Request() humble.MessageTypeSupport {
 	return SelfTest_RequestTypeSupport
@@ -87,7 +87,7 @@ type SelfTestService struct {
 func NewSelfTestService(node *humble.Node, name string, options *humble.ServiceOptions, handler SelfTestServiceRequestHandler) (*SelfTestService, error) {
 	h := func(rmw *humble.ServiceInfo, msg humble.Message, rs humble.ServiceResponseSender) {
 		m := msg.(*SelfTest_Request)
-		responseSender := SelfTestServiceResponseSender{sender: rs}
+		responseSender := SelfTestServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, SelfTestTypeSupport, options, h)

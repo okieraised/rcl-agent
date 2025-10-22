@@ -21,7 +21,7 @@ func init() {
 	humble.RegisterService("geographic_msgs/srv/GetGeographicMap", GetGeographicMapTypeSupport)
 }
 
-type _GetGeographicMapTypeSupport struct{}
+type _GetGeographicMapTypeSupport struct {}
 
 func (s _GetGeographicMapTypeSupport) Request() humble.MessageTypeSupport {
 	return GetGeographicMap_RequestTypeSupport
@@ -87,7 +87,7 @@ type GetGeographicMapService struct {
 func NewGetGeographicMapService(node *humble.Node, name string, options *humble.ServiceOptions, handler GetGeographicMapServiceRequestHandler) (*GetGeographicMapService, error) {
 	h := func(rmw *humble.ServiceInfo, msg humble.Message, rs humble.ServiceResponseSender) {
 		m := msg.(*GetGeographicMap_Request)
-		responseSender := GetGeographicMapServiceResponseSender{sender: rs}
+		responseSender := GetGeographicMapServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, GetGeographicMapTypeSupport, options, h)

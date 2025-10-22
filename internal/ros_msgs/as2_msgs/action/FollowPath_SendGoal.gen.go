@@ -21,7 +21,7 @@ func init() {
 	humble.RegisterService("as2_msgs/action/FollowPath_SendGoal", FollowPath_SendGoalTypeSupport)
 }
 
-type _FollowPath_SendGoalTypeSupport struct{}
+type _FollowPath_SendGoalTypeSupport struct {}
 
 func (s _FollowPath_SendGoalTypeSupport) Request() humble.MessageTypeSupport {
 	return FollowPath_SendGoal_RequestTypeSupport
@@ -87,7 +87,7 @@ type FollowPath_SendGoalService struct {
 func NewFollowPath_SendGoalService(node *humble.Node, name string, options *humble.ServiceOptions, handler FollowPath_SendGoalServiceRequestHandler) (*FollowPath_SendGoalService, error) {
 	h := func(rmw *humble.ServiceInfo, msg humble.Message, rs humble.ServiceResponseSender) {
 		m := msg.(*FollowPath_SendGoal_Request)
-		responseSender := FollowPath_SendGoalServiceResponseSender{sender: rs}
+		responseSender := FollowPath_SendGoalServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, FollowPath_SendGoalTypeSupport, options, h)

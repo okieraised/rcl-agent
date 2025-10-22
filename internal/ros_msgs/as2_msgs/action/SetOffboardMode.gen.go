@@ -24,7 +24,7 @@ func init() {
 	humble.RegisterAction("as2_msgs/action/SetOffboardMode", SetOffboardModeTypeSupport)
 }
 
-type _SetOffboardModeTypeSupport struct{}
+type _SetOffboardModeTypeSupport struct {}
 
 func (s _SetOffboardModeTypeSupport) Goal() humble.MessageTypeSupport {
 	return SetOffboardMode_GoalTypeSupport
@@ -100,7 +100,7 @@ func (s *SetOffboardModeFeedbackSender) Send(msg *SetOffboardMode_Feedback) erro
 	return s.sender.Send(msg)
 }
 
-type SetOffboardModeGoalHandle struct {
+type SetOffboardModeGoalHandle struct{
 	*humble.GoalHandle
 
 	Description *SetOffboardMode_Goal
@@ -147,7 +147,7 @@ func (a _SetOffboardModeAction) TypeSupport() humble.ActionTypeSupport {
 	return SetOffboardModeTypeSupport
 }
 
-type SetOffboardModeServer struct {
+type SetOffboardModeServer struct{
 	*humble.ActionServer
 }
 
@@ -163,7 +163,7 @@ type SetOffboardModeFeedbackHandler func(context.Context, *SetOffboardMode_Feedb
 
 type SetOffboardModeStatusHandler func(context.Context, *action_msgs_msg.GoalStatus)
 
-type SetOffboardModeClient struct {
+type SetOffboardModeClient struct{
 	*humble.ActionClient
 }
 

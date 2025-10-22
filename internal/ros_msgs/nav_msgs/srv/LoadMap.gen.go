@@ -21,7 +21,7 @@ func init() {
 	humble.RegisterService("nav_msgs/srv/LoadMap", LoadMapTypeSupport)
 }
 
-type _LoadMapTypeSupport struct{}
+type _LoadMapTypeSupport struct {}
 
 func (s _LoadMapTypeSupport) Request() humble.MessageTypeSupport {
 	return LoadMap_RequestTypeSupport
@@ -87,7 +87,7 @@ type LoadMapService struct {
 func NewLoadMapService(node *humble.Node, name string, options *humble.ServiceOptions, handler LoadMapServiceRequestHandler) (*LoadMapService, error) {
 	h := func(rmw *humble.ServiceInfo, msg humble.Message, rs humble.ServiceResponseSender) {
 		m := msg.(*LoadMap_Request)
-		responseSender := LoadMapServiceResponseSender{sender: rs}
+		responseSender := LoadMapServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, LoadMapTypeSupport, options, h)

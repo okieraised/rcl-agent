@@ -24,7 +24,7 @@ func init() {
 	humble.RegisterAction("as2_msgs/action/FollowReference", FollowReferenceTypeSupport)
 }
 
-type _FollowReferenceTypeSupport struct{}
+type _FollowReferenceTypeSupport struct {}
 
 func (s _FollowReferenceTypeSupport) Goal() humble.MessageTypeSupport {
 	return FollowReference_GoalTypeSupport
@@ -100,7 +100,7 @@ func (s *FollowReferenceFeedbackSender) Send(msg *FollowReference_Feedback) erro
 	return s.sender.Send(msg)
 }
 
-type FollowReferenceGoalHandle struct {
+type FollowReferenceGoalHandle struct{
 	*humble.GoalHandle
 
 	Description *FollowReference_Goal
@@ -147,7 +147,7 @@ func (a _FollowReferenceAction) TypeSupport() humble.ActionTypeSupport {
 	return FollowReferenceTypeSupport
 }
 
-type FollowReferenceServer struct {
+type FollowReferenceServer struct{
 	*humble.ActionServer
 }
 
@@ -163,7 +163,7 @@ type FollowReferenceFeedbackHandler func(context.Context, *FollowReference_Feedb
 
 type FollowReferenceStatusHandler func(context.Context, *action_msgs_msg.GoalStatus)
 
-type FollowReferenceClient struct {
+type FollowReferenceClient struct{
 	*humble.ActionClient
 }
 

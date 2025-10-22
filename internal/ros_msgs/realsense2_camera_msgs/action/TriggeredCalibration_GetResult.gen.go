@@ -21,7 +21,7 @@ func init() {
 	humble.RegisterService("realsense2_camera_msgs/action/TriggeredCalibration_GetResult", TriggeredCalibration_GetResultTypeSupport)
 }
 
-type _TriggeredCalibration_GetResultTypeSupport struct{}
+type _TriggeredCalibration_GetResultTypeSupport struct {}
 
 func (s _TriggeredCalibration_GetResultTypeSupport) Request() humble.MessageTypeSupport {
 	return TriggeredCalibration_GetResult_RequestTypeSupport
@@ -87,7 +87,7 @@ type TriggeredCalibration_GetResultService struct {
 func NewTriggeredCalibration_GetResultService(node *humble.Node, name string, options *humble.ServiceOptions, handler TriggeredCalibration_GetResultServiceRequestHandler) (*TriggeredCalibration_GetResultService, error) {
 	h := func(rmw *humble.ServiceInfo, msg humble.Message, rs humble.ServiceResponseSender) {
 		m := msg.(*TriggeredCalibration_GetResult_Request)
-		responseSender := TriggeredCalibration_GetResultServiceResponseSender{sender: rs}
+		responseSender := TriggeredCalibration_GetResultServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, TriggeredCalibration_GetResultTypeSupport, options, h)

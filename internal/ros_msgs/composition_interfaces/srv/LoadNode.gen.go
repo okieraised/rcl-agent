@@ -21,7 +21,7 @@ func init() {
 	humble.RegisterService("composition_interfaces/srv/LoadNode", LoadNodeTypeSupport)
 }
 
-type _LoadNodeTypeSupport struct{}
+type _LoadNodeTypeSupport struct {}
 
 func (s _LoadNodeTypeSupport) Request() humble.MessageTypeSupport {
 	return LoadNode_RequestTypeSupport
@@ -87,7 +87,7 @@ type LoadNodeService struct {
 func NewLoadNodeService(node *humble.Node, name string, options *humble.ServiceOptions, handler LoadNodeServiceRequestHandler) (*LoadNodeService, error) {
 	h := func(rmw *humble.ServiceInfo, msg humble.Message, rs humble.ServiceResponseSender) {
 		m := msg.(*LoadNode_Request)
-		responseSender := LoadNodeServiceResponseSender{sender: rs}
+		responseSender := LoadNodeServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, LoadNodeTypeSupport, options, h)

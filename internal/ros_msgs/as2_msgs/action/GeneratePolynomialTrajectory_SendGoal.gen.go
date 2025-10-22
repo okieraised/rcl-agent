@@ -21,7 +21,7 @@ func init() {
 	humble.RegisterService("as2_msgs/action/GeneratePolynomialTrajectory_SendGoal", GeneratePolynomialTrajectory_SendGoalTypeSupport)
 }
 
-type _GeneratePolynomialTrajectory_SendGoalTypeSupport struct{}
+type _GeneratePolynomialTrajectory_SendGoalTypeSupport struct {}
 
 func (s _GeneratePolynomialTrajectory_SendGoalTypeSupport) Request() humble.MessageTypeSupport {
 	return GeneratePolynomialTrajectory_SendGoal_RequestTypeSupport
@@ -87,7 +87,7 @@ type GeneratePolynomialTrajectory_SendGoalService struct {
 func NewGeneratePolynomialTrajectory_SendGoalService(node *humble.Node, name string, options *humble.ServiceOptions, handler GeneratePolynomialTrajectory_SendGoalServiceRequestHandler) (*GeneratePolynomialTrajectory_SendGoalService, error) {
 	h := func(rmw *humble.ServiceInfo, msg humble.Message, rs humble.ServiceResponseSender) {
 		m := msg.(*GeneratePolynomialTrajectory_SendGoal_Request)
-		responseSender := GeneratePolynomialTrajectory_SendGoalServiceResponseSender{sender: rs}
+		responseSender := GeneratePolynomialTrajectory_SendGoalServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, GeneratePolynomialTrajectory_SendGoalTypeSupport, options, h)

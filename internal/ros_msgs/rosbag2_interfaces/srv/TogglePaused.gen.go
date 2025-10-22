@@ -21,7 +21,7 @@ func init() {
 	humble.RegisterService("rosbag2_interfaces/srv/TogglePaused", TogglePausedTypeSupport)
 }
 
-type _TogglePausedTypeSupport struct{}
+type _TogglePausedTypeSupport struct {}
 
 func (s _TogglePausedTypeSupport) Request() humble.MessageTypeSupport {
 	return TogglePaused_RequestTypeSupport
@@ -87,7 +87,7 @@ type TogglePausedService struct {
 func NewTogglePausedService(node *humble.Node, name string, options *humble.ServiceOptions, handler TogglePausedServiceRequestHandler) (*TogglePausedService, error) {
 	h := func(rmw *humble.ServiceInfo, msg humble.Message, rs humble.ServiceResponseSender) {
 		m := msg.(*TogglePaused_Request)
-		responseSender := TogglePausedServiceResponseSender{sender: rs}
+		responseSender := TogglePausedServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, TogglePausedTypeSupport, options, h)

@@ -21,7 +21,7 @@ func init() {
 	humble.RegisterService("rosbag2_interfaces/srv/GetRate", GetRateTypeSupport)
 }
 
-type _GetRateTypeSupport struct{}
+type _GetRateTypeSupport struct {}
 
 func (s _GetRateTypeSupport) Request() humble.MessageTypeSupport {
 	return GetRate_RequestTypeSupport
@@ -87,7 +87,7 @@ type GetRateService struct {
 func NewGetRateService(node *humble.Node, name string, options *humble.ServiceOptions, handler GetRateServiceRequestHandler) (*GetRateService, error) {
 	h := func(rmw *humble.ServiceInfo, msg humble.Message, rs humble.ServiceResponseSender) {
 		m := msg.(*GetRate_Request)
-		responseSender := GetRateServiceResponseSender{sender: rs}
+		responseSender := GetRateServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, GetRateTypeSupport, options, h)

@@ -21,7 +21,7 @@ func init() {
 	humble.RegisterService("composition_interfaces/srv/UnloadNode", UnloadNodeTypeSupport)
 }
 
-type _UnloadNodeTypeSupport struct{}
+type _UnloadNodeTypeSupport struct {}
 
 func (s _UnloadNodeTypeSupport) Request() humble.MessageTypeSupport {
 	return UnloadNode_RequestTypeSupport
@@ -87,7 +87,7 @@ type UnloadNodeService struct {
 func NewUnloadNodeService(node *humble.Node, name string, options *humble.ServiceOptions, handler UnloadNodeServiceRequestHandler) (*UnloadNodeService, error) {
 	h := func(rmw *humble.ServiceInfo, msg humble.Message, rs humble.ServiceResponseSender) {
 		m := msg.(*UnloadNode_Request)
-		responseSender := UnloadNodeServiceResponseSender{sender: rs}
+		responseSender := UnloadNodeServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, UnloadNodeTypeSupport, options, h)

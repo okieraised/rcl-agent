@@ -21,7 +21,7 @@ func init() {
 	humble.RegisterService("realsense2_camera_msgs/srv/CalibConfigRead", CalibConfigReadTypeSupport)
 }
 
-type _CalibConfigReadTypeSupport struct{}
+type _CalibConfigReadTypeSupport struct {}
 
 func (s _CalibConfigReadTypeSupport) Request() humble.MessageTypeSupport {
 	return CalibConfigRead_RequestTypeSupport
@@ -87,7 +87,7 @@ type CalibConfigReadService struct {
 func NewCalibConfigReadService(node *humble.Node, name string, options *humble.ServiceOptions, handler CalibConfigReadServiceRequestHandler) (*CalibConfigReadService, error) {
 	h := func(rmw *humble.ServiceInfo, msg humble.Message, rs humble.ServiceResponseSender) {
 		m := msg.(*CalibConfigRead_Request)
-		responseSender := CalibConfigReadServiceResponseSender{sender: rs}
+		responseSender := CalibConfigReadServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, CalibConfigReadTypeSupport, options, h)

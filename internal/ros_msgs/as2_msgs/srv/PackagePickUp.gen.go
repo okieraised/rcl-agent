@@ -21,7 +21,7 @@ func init() {
 	humble.RegisterService("as2_msgs/srv/PackagePickUp", PackagePickUpTypeSupport)
 }
 
-type _PackagePickUpTypeSupport struct{}
+type _PackagePickUpTypeSupport struct {}
 
 func (s _PackagePickUpTypeSupport) Request() humble.MessageTypeSupport {
 	return PackagePickUp_RequestTypeSupport
@@ -87,7 +87,7 @@ type PackagePickUpService struct {
 func NewPackagePickUpService(node *humble.Node, name string, options *humble.ServiceOptions, handler PackagePickUpServiceRequestHandler) (*PackagePickUpService, error) {
 	h := func(rmw *humble.ServiceInfo, msg humble.Message, rs humble.ServiceResponseSender) {
 		m := msg.(*PackagePickUp_Request)
-		responseSender := PackagePickUpServiceResponseSender{sender: rs}
+		responseSender := PackagePickUpServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, PackagePickUpTypeSupport, options, h)

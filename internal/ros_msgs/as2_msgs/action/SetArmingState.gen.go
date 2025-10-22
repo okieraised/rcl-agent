@@ -24,7 +24,7 @@ func init() {
 	humble.RegisterAction("as2_msgs/action/SetArmingState", SetArmingStateTypeSupport)
 }
 
-type _SetArmingStateTypeSupport struct{}
+type _SetArmingStateTypeSupport struct {}
 
 func (s _SetArmingStateTypeSupport) Goal() humble.MessageTypeSupport {
 	return SetArmingState_GoalTypeSupport
@@ -100,7 +100,7 @@ func (s *SetArmingStateFeedbackSender) Send(msg *SetArmingState_Feedback) error 
 	return s.sender.Send(msg)
 }
 
-type SetArmingStateGoalHandle struct {
+type SetArmingStateGoalHandle struct{
 	*humble.GoalHandle
 
 	Description *SetArmingState_Goal
@@ -147,7 +147,7 @@ func (a _SetArmingStateAction) TypeSupport() humble.ActionTypeSupport {
 	return SetArmingStateTypeSupport
 }
 
-type SetArmingStateServer struct {
+type SetArmingStateServer struct{
 	*humble.ActionServer
 }
 
@@ -163,7 +163,7 @@ type SetArmingStateFeedbackHandler func(context.Context, *SetArmingState_Feedbac
 
 type SetArmingStateStatusHandler func(context.Context, *action_msgs_msg.GoalStatus)
 
-type SetArmingStateClient struct {
+type SetArmingStateClient struct{
 	*humble.ActionClient
 }
 

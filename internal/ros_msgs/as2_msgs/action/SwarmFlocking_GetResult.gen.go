@@ -21,7 +21,7 @@ func init() {
 	humble.RegisterService("as2_msgs/action/SwarmFlocking_GetResult", SwarmFlocking_GetResultTypeSupport)
 }
 
-type _SwarmFlocking_GetResultTypeSupport struct{}
+type _SwarmFlocking_GetResultTypeSupport struct {}
 
 func (s _SwarmFlocking_GetResultTypeSupport) Request() humble.MessageTypeSupport {
 	return SwarmFlocking_GetResult_RequestTypeSupport
@@ -87,7 +87,7 @@ type SwarmFlocking_GetResultService struct {
 func NewSwarmFlocking_GetResultService(node *humble.Node, name string, options *humble.ServiceOptions, handler SwarmFlocking_GetResultServiceRequestHandler) (*SwarmFlocking_GetResultService, error) {
 	h := func(rmw *humble.ServiceInfo, msg humble.Message, rs humble.ServiceResponseSender) {
 		m := msg.(*SwarmFlocking_GetResult_Request)
-		responseSender := SwarmFlocking_GetResultServiceResponseSender{sender: rs}
+		responseSender := SwarmFlocking_GetResultServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, SwarmFlocking_GetResultTypeSupport, options, h)

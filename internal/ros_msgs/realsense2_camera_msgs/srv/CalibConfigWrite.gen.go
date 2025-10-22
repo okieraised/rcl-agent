@@ -21,7 +21,7 @@ func init() {
 	humble.RegisterService("realsense2_camera_msgs/srv/CalibConfigWrite", CalibConfigWriteTypeSupport)
 }
 
-type _CalibConfigWriteTypeSupport struct{}
+type _CalibConfigWriteTypeSupport struct {}
 
 func (s _CalibConfigWriteTypeSupport) Request() humble.MessageTypeSupport {
 	return CalibConfigWrite_RequestTypeSupport
@@ -87,7 +87,7 @@ type CalibConfigWriteService struct {
 func NewCalibConfigWriteService(node *humble.Node, name string, options *humble.ServiceOptions, handler CalibConfigWriteServiceRequestHandler) (*CalibConfigWriteService, error) {
 	h := func(rmw *humble.ServiceInfo, msg humble.Message, rs humble.ServiceResponseSender) {
 		m := msg.(*CalibConfigWrite_Request)
-		responseSender := CalibConfigWriteServiceResponseSender{sender: rs}
+		responseSender := CalibConfigWriteServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, CalibConfigWriteTypeSupport, options, h)

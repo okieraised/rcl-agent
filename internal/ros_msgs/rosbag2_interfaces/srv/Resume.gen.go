@@ -21,7 +21,7 @@ func init() {
 	humble.RegisterService("rosbag2_interfaces/srv/Resume", ResumeTypeSupport)
 }
 
-type _ResumeTypeSupport struct{}
+type _ResumeTypeSupport struct {}
 
 func (s _ResumeTypeSupport) Request() humble.MessageTypeSupport {
 	return Resume_RequestTypeSupport
@@ -87,7 +87,7 @@ type ResumeService struct {
 func NewResumeService(node *humble.Node, name string, options *humble.ServiceOptions, handler ResumeServiceRequestHandler) (*ResumeService, error) {
 	h := func(rmw *humble.ServiceInfo, msg humble.Message, rs humble.ServiceResponseSender) {
 		m := msg.(*Resume_Request)
-		responseSender := ResumeServiceResponseSender{sender: rs}
+		responseSender := ResumeServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, ResumeTypeSupport, options, h)

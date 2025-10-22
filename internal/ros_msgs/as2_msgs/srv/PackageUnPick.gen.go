@@ -21,7 +21,7 @@ func init() {
 	humble.RegisterService("as2_msgs/srv/PackageUnPick", PackageUnPickTypeSupport)
 }
 
-type _PackageUnPickTypeSupport struct{}
+type _PackageUnPickTypeSupport struct {}
 
 func (s _PackageUnPickTypeSupport) Request() humble.MessageTypeSupport {
 	return PackageUnPick_RequestTypeSupport
@@ -87,7 +87,7 @@ type PackageUnPickService struct {
 func NewPackageUnPickService(node *humble.Node, name string, options *humble.ServiceOptions, handler PackageUnPickServiceRequestHandler) (*PackageUnPickService, error) {
 	h := func(rmw *humble.ServiceInfo, msg humble.Message, rs humble.ServiceResponseSender) {
 		m := msg.(*PackageUnPick_Request)
-		responseSender := PackageUnPickServiceResponseSender{sender: rs}
+		responseSender := PackageUnPickServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, PackageUnPickTypeSupport, options, h)

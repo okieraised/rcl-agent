@@ -21,7 +21,7 @@ func init() {
 	humble.RegisterService("as2_msgs/srv/SetSpeed", SetSpeedTypeSupport)
 }
 
-type _SetSpeedTypeSupport struct{}
+type _SetSpeedTypeSupport struct {}
 
 func (s _SetSpeedTypeSupport) Request() humble.MessageTypeSupport {
 	return SetSpeed_RequestTypeSupport
@@ -87,7 +87,7 @@ type SetSpeedService struct {
 func NewSetSpeedService(node *humble.Node, name string, options *humble.ServiceOptions, handler SetSpeedServiceRequestHandler) (*SetSpeedService, error) {
 	h := func(rmw *humble.ServiceInfo, msg humble.Message, rs humble.ServiceResponseSender) {
 		m := msg.(*SetSpeed_Request)
-		responseSender := SetSpeedServiceResponseSender{sender: rs}
+		responseSender := SetSpeedServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, SetSpeedTypeSupport, options, h)

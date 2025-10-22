@@ -21,7 +21,7 @@ func init() {
 	humble.RegisterService("as2_msgs/srv/ListControlModes", ListControlModesTypeSupport)
 }
 
-type _ListControlModesTypeSupport struct{}
+type _ListControlModesTypeSupport struct {}
 
 func (s _ListControlModesTypeSupport) Request() humble.MessageTypeSupport {
 	return ListControlModes_RequestTypeSupport
@@ -87,7 +87,7 @@ type ListControlModesService struct {
 func NewListControlModesService(node *humble.Node, name string, options *humble.ServiceOptions, handler ListControlModesServiceRequestHandler) (*ListControlModesService, error) {
 	h := func(rmw *humble.ServiceInfo, msg humble.Message, rs humble.ServiceResponseSender) {
 		m := msg.(*ListControlModes_Request)
-		responseSender := ListControlModesServiceResponseSender{sender: rs}
+		responseSender := ListControlModesServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, ListControlModesTypeSupport, options, h)

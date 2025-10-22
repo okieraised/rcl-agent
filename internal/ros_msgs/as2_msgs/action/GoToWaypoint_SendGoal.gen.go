@@ -21,7 +21,7 @@ func init() {
 	humble.RegisterService("as2_msgs/action/GoToWaypoint_SendGoal", GoToWaypoint_SendGoalTypeSupport)
 }
 
-type _GoToWaypoint_SendGoalTypeSupport struct{}
+type _GoToWaypoint_SendGoalTypeSupport struct {}
 
 func (s _GoToWaypoint_SendGoalTypeSupport) Request() humble.MessageTypeSupport {
 	return GoToWaypoint_SendGoal_RequestTypeSupport
@@ -87,7 +87,7 @@ type GoToWaypoint_SendGoalService struct {
 func NewGoToWaypoint_SendGoalService(node *humble.Node, name string, options *humble.ServiceOptions, handler GoToWaypoint_SendGoalServiceRequestHandler) (*GoToWaypoint_SendGoalService, error) {
 	h := func(rmw *humble.ServiceInfo, msg humble.Message, rs humble.ServiceResponseSender) {
 		m := msg.(*GoToWaypoint_SendGoal_Request)
-		responseSender := GoToWaypoint_SendGoalServiceResponseSender{sender: rs}
+		responseSender := GoToWaypoint_SendGoalServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, GoToWaypoint_SendGoalTypeSupport, options, h)

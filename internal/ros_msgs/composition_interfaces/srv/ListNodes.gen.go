@@ -21,7 +21,7 @@ func init() {
 	humble.RegisterService("composition_interfaces/srv/ListNodes", ListNodesTypeSupport)
 }
 
-type _ListNodesTypeSupport struct{}
+type _ListNodesTypeSupport struct {}
 
 func (s _ListNodesTypeSupport) Request() humble.MessageTypeSupport {
 	return ListNodes_RequestTypeSupport
@@ -87,7 +87,7 @@ type ListNodesService struct {
 func NewListNodesService(node *humble.Node, name string, options *humble.ServiceOptions, handler ListNodesServiceRequestHandler) (*ListNodesService, error) {
 	h := func(rmw *humble.ServiceInfo, msg humble.Message, rs humble.ServiceResponseSender) {
 		m := msg.(*ListNodes_Request)
-		responseSender := ListNodesServiceResponseSender{sender: rs}
+		responseSender := ListNodesServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, ListNodesTypeSupport, options, h)

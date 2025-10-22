@@ -21,7 +21,7 @@ func init() {
 	humble.RegisterService("realsense2_camera_msgs/srv/DeviceInfo", DeviceInfoTypeSupport)
 }
 
-type _DeviceInfoTypeSupport struct{}
+type _DeviceInfoTypeSupport struct {}
 
 func (s _DeviceInfoTypeSupport) Request() humble.MessageTypeSupport {
 	return DeviceInfo_RequestTypeSupport
@@ -87,7 +87,7 @@ type DeviceInfoService struct {
 func NewDeviceInfoService(node *humble.Node, name string, options *humble.ServiceOptions, handler DeviceInfoServiceRequestHandler) (*DeviceInfoService, error) {
 	h := func(rmw *humble.ServiceInfo, msg humble.Message, rs humble.ServiceResponseSender) {
 		m := msg.(*DeviceInfo_Request)
-		responseSender := DeviceInfoServiceResponseSender{sender: rs}
+		responseSender := DeviceInfoServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, DeviceInfoTypeSupport, options, h)

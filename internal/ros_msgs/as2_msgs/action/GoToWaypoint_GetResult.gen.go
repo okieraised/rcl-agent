@@ -21,7 +21,7 @@ func init() {
 	humble.RegisterService("as2_msgs/action/GoToWaypoint_GetResult", GoToWaypoint_GetResultTypeSupport)
 }
 
-type _GoToWaypoint_GetResultTypeSupport struct{}
+type _GoToWaypoint_GetResultTypeSupport struct {}
 
 func (s _GoToWaypoint_GetResultTypeSupport) Request() humble.MessageTypeSupport {
 	return GoToWaypoint_GetResult_RequestTypeSupport
@@ -87,7 +87,7 @@ type GoToWaypoint_GetResultService struct {
 func NewGoToWaypoint_GetResultService(node *humble.Node, name string, options *humble.ServiceOptions, handler GoToWaypoint_GetResultServiceRequestHandler) (*GoToWaypoint_GetResultService, error) {
 	h := func(rmw *humble.ServiceInfo, msg humble.Message, rs humble.ServiceResponseSender) {
 		m := msg.(*GoToWaypoint_GetResult_Request)
-		responseSender := GoToWaypoint_GetResultServiceResponseSender{sender: rs}
+		responseSender := GoToWaypoint_GetResultServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, GoToWaypoint_GetResultTypeSupport, options, h)

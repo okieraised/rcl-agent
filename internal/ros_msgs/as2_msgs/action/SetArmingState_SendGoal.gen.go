@@ -21,7 +21,7 @@ func init() {
 	humble.RegisterService("as2_msgs/action/SetArmingState_SendGoal", SetArmingState_SendGoalTypeSupport)
 }
 
-type _SetArmingState_SendGoalTypeSupport struct{}
+type _SetArmingState_SendGoalTypeSupport struct {}
 
 func (s _SetArmingState_SendGoalTypeSupport) Request() humble.MessageTypeSupport {
 	return SetArmingState_SendGoal_RequestTypeSupport
@@ -87,7 +87,7 @@ type SetArmingState_SendGoalService struct {
 func NewSetArmingState_SendGoalService(node *humble.Node, name string, options *humble.ServiceOptions, handler SetArmingState_SendGoalServiceRequestHandler) (*SetArmingState_SendGoalService, error) {
 	h := func(rmw *humble.ServiceInfo, msg humble.Message, rs humble.ServiceResponseSender) {
 		m := msg.(*SetArmingState_SendGoal_Request)
-		responseSender := SetArmingState_SendGoalServiceResponseSender{sender: rs}
+		responseSender := SetArmingState_SendGoalServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, SetArmingState_SendGoalTypeSupport, options, h)

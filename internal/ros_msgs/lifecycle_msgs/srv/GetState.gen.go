@@ -21,7 +21,7 @@ func init() {
 	humble.RegisterService("lifecycle_msgs/srv/GetState", GetStateTypeSupport)
 }
 
-type _GetStateTypeSupport struct{}
+type _GetStateTypeSupport struct {}
 
 func (s _GetStateTypeSupport) Request() humble.MessageTypeSupport {
 	return GetState_RequestTypeSupport
@@ -87,7 +87,7 @@ type GetStateService struct {
 func NewGetStateService(node *humble.Node, name string, options *humble.ServiceOptions, handler GetStateServiceRequestHandler) (*GetStateService, error) {
 	h := func(rmw *humble.ServiceInfo, msg humble.Message, rs humble.ServiceResponseSender) {
 		m := msg.(*GetState_Request)
-		responseSender := GetStateServiceResponseSender{sender: rs}
+		responseSender := GetStateServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, GetStateTypeSupport, options, h)

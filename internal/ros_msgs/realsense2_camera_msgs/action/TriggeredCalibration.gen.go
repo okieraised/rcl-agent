@@ -24,7 +24,7 @@ func init() {
 	humble.RegisterAction("realsense2_camera_msgs/action/TriggeredCalibration", TriggeredCalibrationTypeSupport)
 }
 
-type _TriggeredCalibrationTypeSupport struct{}
+type _TriggeredCalibrationTypeSupport struct {}
 
 func (s _TriggeredCalibrationTypeSupport) Goal() humble.MessageTypeSupport {
 	return TriggeredCalibration_GoalTypeSupport
@@ -100,7 +100,7 @@ func (s *TriggeredCalibrationFeedbackSender) Send(msg *TriggeredCalibration_Feed
 	return s.sender.Send(msg)
 }
 
-type TriggeredCalibrationGoalHandle struct {
+type TriggeredCalibrationGoalHandle struct{
 	*humble.GoalHandle
 
 	Description *TriggeredCalibration_Goal
@@ -147,7 +147,7 @@ func (a _TriggeredCalibrationAction) TypeSupport() humble.ActionTypeSupport {
 	return TriggeredCalibrationTypeSupport
 }
 
-type TriggeredCalibrationServer struct {
+type TriggeredCalibrationServer struct{
 	*humble.ActionServer
 }
 
@@ -163,7 +163,7 @@ type TriggeredCalibrationFeedbackHandler func(context.Context, *TriggeredCalibra
 
 type TriggeredCalibrationStatusHandler func(context.Context, *action_msgs_msg.GoalStatus)
 
-type TriggeredCalibrationClient struct {
+type TriggeredCalibrationClient struct{
 	*humble.ActionClient
 }
 

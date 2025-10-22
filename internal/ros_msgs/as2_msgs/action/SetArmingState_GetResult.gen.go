@@ -21,7 +21,7 @@ func init() {
 	humble.RegisterService("as2_msgs/action/SetArmingState_GetResult", SetArmingState_GetResultTypeSupport)
 }
 
-type _SetArmingState_GetResultTypeSupport struct{}
+type _SetArmingState_GetResultTypeSupport struct {}
 
 func (s _SetArmingState_GetResultTypeSupport) Request() humble.MessageTypeSupport {
 	return SetArmingState_GetResult_RequestTypeSupport
@@ -87,7 +87,7 @@ type SetArmingState_GetResultService struct {
 func NewSetArmingState_GetResultService(node *humble.Node, name string, options *humble.ServiceOptions, handler SetArmingState_GetResultServiceRequestHandler) (*SetArmingState_GetResultService, error) {
 	h := func(rmw *humble.ServiceInfo, msg humble.Message, rs humble.ServiceResponseSender) {
 		m := msg.(*SetArmingState_GetResult_Request)
-		responseSender := SetArmingState_GetResultServiceResponseSender{sender: rs}
+		responseSender := SetArmingState_GetResultServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, SetArmingState_GetResultTypeSupport, options, h)

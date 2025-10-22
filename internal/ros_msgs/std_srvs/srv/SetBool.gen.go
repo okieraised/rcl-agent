@@ -21,7 +21,7 @@ func init() {
 	humble.RegisterService("std_srvs/srv/SetBool", SetBoolTypeSupport)
 }
 
-type _SetBoolTypeSupport struct{}
+type _SetBoolTypeSupport struct {}
 
 func (s _SetBoolTypeSupport) Request() humble.MessageTypeSupport {
 	return SetBool_RequestTypeSupport
@@ -87,7 +87,7 @@ type SetBoolService struct {
 func NewSetBoolService(node *humble.Node, name string, options *humble.ServiceOptions, handler SetBoolServiceRequestHandler) (*SetBoolService, error) {
 	h := func(rmw *humble.ServiceInfo, msg humble.Message, rs humble.ServiceResponseSender) {
 		m := msg.(*SetBool_Request)
-		responseSender := SetBoolServiceResponseSender{sender: rs}
+		responseSender := SetBoolServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, SetBoolTypeSupport, options, h)

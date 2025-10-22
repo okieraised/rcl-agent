@@ -21,7 +21,7 @@ func init() {
 	humble.RegisterService("as2_msgs/srv/GetGeozone", GetGeozoneTypeSupport)
 }
 
-type _GetGeozoneTypeSupport struct{}
+type _GetGeozoneTypeSupport struct {}
 
 func (s _GetGeozoneTypeSupport) Request() humble.MessageTypeSupport {
 	return GetGeozone_RequestTypeSupport
@@ -87,7 +87,7 @@ type GetGeozoneService struct {
 func NewGetGeozoneService(node *humble.Node, name string, options *humble.ServiceOptions, handler GetGeozoneServiceRequestHandler) (*GetGeozoneService, error) {
 	h := func(rmw *humble.ServiceInfo, msg humble.Message, rs humble.ServiceResponseSender) {
 		m := msg.(*GetGeozone_Request)
-		responseSender := GetGeozoneServiceResponseSender{sender: rs}
+		responseSender := GetGeozoneServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, GetGeozoneTypeSupport, options, h)

@@ -21,7 +21,7 @@ func init() {
 	humble.RegisterService("rosbag2_interfaces/srv/Seek", SeekTypeSupport)
 }
 
-type _SeekTypeSupport struct{}
+type _SeekTypeSupport struct {}
 
 func (s _SeekTypeSupport) Request() humble.MessageTypeSupport {
 	return Seek_RequestTypeSupport
@@ -87,7 +87,7 @@ type SeekService struct {
 func NewSeekService(node *humble.Node, name string, options *humble.ServiceOptions, handler SeekServiceRequestHandler) (*SeekService, error) {
 	h := func(rmw *humble.ServiceInfo, msg humble.Message, rs humble.ServiceResponseSender) {
 		m := msg.(*Seek_Request)
-		responseSender := SeekServiceResponseSender{sender: rs}
+		responseSender := SeekServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, SeekTypeSupport, options, h)

@@ -21,7 +21,7 @@ func init() {
 	humble.RegisterService("rosbag2_interfaces/srv/SetRate", SetRateTypeSupport)
 }
 
-type _SetRateTypeSupport struct{}
+type _SetRateTypeSupport struct {}
 
 func (s _SetRateTypeSupport) Request() humble.MessageTypeSupport {
 	return SetRate_RequestTypeSupport
@@ -87,7 +87,7 @@ type SetRateService struct {
 func NewSetRateService(node *humble.Node, name string, options *humble.ServiceOptions, handler SetRateServiceRequestHandler) (*SetRateService, error) {
 	h := func(rmw *humble.ServiceInfo, msg humble.Message, rs humble.ServiceResponseSender) {
 		m := msg.(*SetRate_Request)
-		responseSender := SetRateServiceResponseSender{sender: rs}
+		responseSender := SetRateServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, SetRateTypeSupport, options, h)

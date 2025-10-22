@@ -1,6 +1,8 @@
 package signaling
 
 import (
+	"fmt"
+	"sync"
 	"time"
 
 	"github.com/google/uuid"
@@ -19,29 +21,45 @@ const (
 
 type MessageHandler func(msg common.SignalingMessage)
 
-type WSClient struct {
+type WebsocketClient struct {
 	ID      uuid.UUID
 	Conn    *websocket.Conn
 	send    chan common.SignalingMessage
 	onMsgFn MessageHandler
 	hub     *WebsocketHub
+	writeMu sync.Mutex
+	closed  chan struct{}
 }
 
 // NewWebsocketClient creates a new websocket client
-func NewWebsocketClient(id uuid.UUID, conn *websocket.Conn, hub *WebsocketHub) *WSClient {
-	return &WSClient{
-		ID:   id,
-		Conn: conn,
-		send: make(chan common.SignalingMessage, 16),
-		hub:  hub,
+func NewWebsocketClient(id uuid.UUID, conn *websocket.Conn, hub *WebsocketHub) *WebsocketClient {
+
+	c := &WebsocketClient{
+		ID:     id,
+		Conn:   conn,
+		send:   make(chan common.SignalingMessage, 16),
+		hub:    hub,
+		closed: make(chan struct{}),
 	}
+
+	go c.pingLoop()
+
+	return c
 }
 
-func (c *WSClient) SetMessageHandler(fn MessageHandler) {
+func (c *WebsocketClient) SetMessageHandler(fn MessageHandler) {
 	c.onMsgFn = fn
 }
 
-func (c *WSClient) Read() {
+func (c *WebsocketClient) Send(msg common.SignalingMessage) {
+	select {
+	case c.send <- msg:
+	default:
+		log.Default().Info(fmt.Sprintf("client %s's send buffer is full, dropping message", c.ID))
+	}
+}
+
+func (c *WebsocketClient) Read() {
 	defer func() {
 		c.hub.unregister <- c
 		_ = c.Conn.Close()
@@ -79,8 +97,7 @@ func (c *WSClient) Read() {
 	}
 }
 
-func (c *WSClient) Write() {
-	go c.PingLoop()
+func (c *WebsocketClient) Write() {
 
 	for {
 		select {
@@ -91,13 +108,13 @@ func (c *WSClient) Write() {
 
 			if !ok {
 				// Channel closed -> send close frame
-				if err := c.Conn.WriteMessage(websocket.CloseMessage, []byte{}); err != nil {
+				if err := c.safeWrite(websocket.CloseMessage, []byte{}); err != nil {
 					log.Default().Info(errors.Wrap(err, "failed to send close message").Error())
 				}
 				return
 			}
 
-			if err := c.Conn.WriteJSON(message); err != nil {
+			if err := c.WriteJSON(message); err != nil {
 				log.Default().Info(errors.Wrap(err, "failed to send message").Error())
 				return
 			}
@@ -105,8 +122,27 @@ func (c *WSClient) Write() {
 	}
 }
 
-// PingLoop handles periodic WebSocket pings to keep the connection alive.
-func (c *WSClient) PingLoop() {
+func (c *WebsocketClient) safeWrite(msgType int, data []byte) error {
+	c.writeMu.Lock()
+	defer c.writeMu.Unlock()
+
+	if err := c.Conn.SetWriteDeadline(time.Now().Add(writeWait)); err != nil {
+		return err
+	}
+	return c.Conn.WriteMessage(msgType, data)
+}
+
+func (c *WebsocketClient) WriteJSON(v any) error {
+	c.writeMu.Lock()
+	defer c.writeMu.Unlock()
+
+	if err := c.Conn.SetWriteDeadline(time.Now().Add(writeWait)); err != nil {
+		return err
+	}
+	return c.Conn.WriteJSON(v)
+}
+
+func (c *WebsocketClient) pingLoop() {
 	ticker := time.NewTicker(pingPeriod)
 	defer func() {
 		ticker.Stop()
@@ -116,17 +152,23 @@ func (c *WSClient) PingLoop() {
 	for {
 		select {
 		case <-ticker.C:
-			if err := c.Conn.SetWriteDeadline(time.Now().Add(writeWait)); err != nil {
-				log.Default().Info(errors.Wrap(err, "failed to set write deadline").Error())
-			}
-			if err := c.Conn.WriteMessage(websocket.PingMessage, nil); err != nil {
-				log.Default().Info(errors.Wrap(err, "failed to send ping").Error())
+			if err := c.safeWrite(websocket.PingMessage, nil); err != nil {
+				log.Default().Error(errors.Wrap(err, fmt.Sprintf("client [%s] ping error", c.ID.String())).Error())
 				return
 			}
+		case <-c.closed:
+			return
 		}
 	}
 }
 
-func (c *WSClient) Close() {
-	close(c.send)
+func (c *WebsocketClient) Close() {
+	select {
+	case <-c.closed:
+		return
+	default:
+		close(c.closed)
+		close(c.send)
+		_ = c.Conn.Close()
+	}
 }

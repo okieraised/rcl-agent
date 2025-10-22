@@ -21,7 +21,7 @@ func init() {
 	humble.RegisterService("realsense2_camera_msgs/action/TriggeredCalibration_SendGoal", TriggeredCalibration_SendGoalTypeSupport)
 }
 
-type _TriggeredCalibration_SendGoalTypeSupport struct{}
+type _TriggeredCalibration_SendGoalTypeSupport struct {}
 
 func (s _TriggeredCalibration_SendGoalTypeSupport) Request() humble.MessageTypeSupport {
 	return TriggeredCalibration_SendGoal_RequestTypeSupport
@@ -87,7 +87,7 @@ type TriggeredCalibration_SendGoalService struct {
 func NewTriggeredCalibration_SendGoalService(node *humble.Node, name string, options *humble.ServiceOptions, handler TriggeredCalibration_SendGoalServiceRequestHandler) (*TriggeredCalibration_SendGoalService, error) {
 	h := func(rmw *humble.ServiceInfo, msg humble.Message, rs humble.ServiceResponseSender) {
 		m := msg.(*TriggeredCalibration_SendGoal_Request)
-		responseSender := TriggeredCalibration_SendGoalServiceResponseSender{sender: rs}
+		responseSender := TriggeredCalibration_SendGoalServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, TriggeredCalibration_SendGoalTypeSupport, options, h)

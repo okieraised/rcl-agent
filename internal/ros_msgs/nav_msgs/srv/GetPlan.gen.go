@@ -21,7 +21,7 @@ func init() {
 	humble.RegisterService("nav_msgs/srv/GetPlan", GetPlanTypeSupport)
 }
 
-type _GetPlanTypeSupport struct{}
+type _GetPlanTypeSupport struct {}
 
 func (s _GetPlanTypeSupport) Request() humble.MessageTypeSupport {
 	return GetPlan_RequestTypeSupport
@@ -87,7 +87,7 @@ type GetPlanService struct {
 func NewGetPlanService(node *humble.Node, name string, options *humble.ServiceOptions, handler GetPlanServiceRequestHandler) (*GetPlanService, error) {
 	h := func(rmw *humble.ServiceInfo, msg humble.Message, rs humble.ServiceResponseSender) {
 		m := msg.(*GetPlan_Request)
-		responseSender := GetPlanServiceResponseSender{sender: rs}
+		responseSender := GetPlanServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, GetPlanTypeSupport, options, h)

@@ -34,15 +34,10 @@ const (
 	qosExactlyOnce byte = 2
 )
 
-const (
-	webRTCMQTTMsgTypeSignaling   = "Signaling"
-	webRTCMQTTMsgTypeNegotiating = "Negotiating"
-	webRTCMQTTMsgTypeNegotiated  = "Negotiated"
-)
-
-var webRTCValidCommandType = map[string]struct{}{
-	webRTCMQTTMsgTypeSignaling:   {},
-	webRTCMQTTMsgTypeNegotiating: {},
+func recoverFn() {
+	if rec := recover(); rec != nil {
+		log.Default().Info(fmt.Sprintf("recovered from panic: %v: %s", rec, debug.Stack()))
+	}
 }
 
 func getHTTPPort() int {
@@ -54,23 +49,23 @@ func getHTTPPort() int {
 }
 
 type WebRTCDaemon struct {
-	id        uuid.UUID
-	ctx       context.Context
-	cancel    context.CancelFunc
-	cMqtt     mqtt.Client
-	cWS       *websocket.Conn
-	hub       *signaling.WebsocketHub
-	sem       map[string]struct{}
-	frameCh   map[string]chan []byte
-	enableCh  map[string]chan bool
-	closeCh   map[string]chan struct{}
-	errCh     map[string]chan error
-	wg        sync.WaitGroup
-	mu        sync.RWMutex
-	closeOnce sync.Once
+	id         uuid.UUID
+	ctx        context.Context
+	cancel     context.CancelFunc
+	cMqtt      mqtt.Client
+	cWebsocket *signaling.WebsocketClient
+	hub        *signaling.WebsocketHub
+	sem        map[string]struct{}
+	frameCh    map[string]chan []byte
+	enableCh   map[string]chan bool
+	closeCh    map[string]chan struct{}
+	errCh      map[string]chan error
+	wg         sync.WaitGroup
+	mu         sync.RWMutex
+	closeOnce  sync.Once
 }
 
-func NewWebRTCViewer(ctx context.Context) (*WebRTCDaemon, error) {
+func NewWebRTCDaemon(ctx context.Context) (*WebRTCDaemon, error) {
 	log.Default().Info("Starting WebRTC streaming daemon")
 
 	cCtx, cancel := context.WithCancel(ctx)
@@ -96,12 +91,8 @@ func NewWebRTCViewer(ctx context.Context) (*WebRTCDaemon, error) {
 
 func (w *WebRTCDaemon) Start() error {
 	ctx, cancel := context.WithCancel(w.ctx)
-	defer func() {
-		if rec := recover(); rec != nil {
-			log.Default().Panic(fmt.Sprintf("recovered from panic: %v: %s", rec, debug.Stack()))
-		}
-		cancel()
-	}()
+	defer cancel()
+	defer recoverFn()
 
 	// If using mqtt
 	if viper.GetBool(config.AgentEnableMQTT) {
@@ -129,8 +120,8 @@ func (w *WebRTCDaemon) Start() error {
 		client := signaling.NewWebsocketClient(w.id, conn, w.hub)
 		client.SetMessageHandler(w.websocketHandler)
 		w.hub.GetRegister() <- client
-		go client.PingLoop()
 		go client.Read()
+		w.cWebsocket = client
 	}
 
 	for {
@@ -142,58 +133,59 @@ func (w *WebRTCDaemon) Start() error {
 	}
 }
 
-func (w *WebRTCDaemon) websocketHandler(msg common.SignalingMessage) {
-	fmt.Println("HEEEEEEEEEEEEEEEEEEEEEEEEEEE", msg.Data)
-
+func (w *WebRTCDaemon) messageHandler(payload common.SignalingMessage) {
+	err := payload.ValidateWebRTC()
+	if err != nil {
+		log.Default().Info(errors.Wrap(err, "failed to validate webrtc payload").Error())
+		return
+	}
+	log.Default().Debug(fmt.Sprintf("WebRTC signaling message received: %v", payload))
+	switch payload.Payload.Type {
+	case constants.MsgTypeWebRTCInit:
+		w.mu.Lock()
+		defer w.mu.Unlock()
+		if _, ok := w.sem[payload.Payload.TopicName]; ok {
+			log.Default().Info(fmt.Sprintf("There is an existing subscriber on topic [%s]", payload.Payload.TopicName))
+			return
+		}
+		w.sem[payload.Payload.TopicName] = struct{}{}
+		w.frameCh[payload.Payload.TopicName] = make(chan []byte, 64)
+		w.enableCh[payload.Payload.TopicName] = make(chan bool, 1)
+		w.closeCh[payload.Payload.TopicName] = make(chan struct{})
+		w.errCh[payload.Payload.TopicName] = make(chan error, 1)
+		w.topicSubscriptionHandler(payload)
+	case constants.MsgTypeOffer:
+		w.sdpExchangeHandler(payload)
+	case constants.MsgTypeAnswer:
+	default:
+		wErr := fmt.Errorf("invalid payload type: %s", payload.Payload.Type)
+		log.Default().Error(wErr.Error())
+		return
+	}
 }
 
-func (w *WebRTCDaemon) mqttHandler(client mqtt.Client, msg mqtt.Message) {
+// websocketHandler handles the websocket signaling messages
+func (w *WebRTCDaemon) websocketHandler(payload common.SignalingMessage) {
+	w.messageHandler(payload)
+}
 
-	var payload common.MQTTWebRTCSDPOfferMsg
+// mqttHandler handles the mqtt signaling messages
+func (w *WebRTCDaemon) mqttHandler(client mqtt.Client, msg mqtt.Message) {
+	var payload common.SignalingMessage
 	err := json.Unmarshal(msg.Payload(), &payload)
 	if err != nil {
 		wErr := errors.Wrapf(err, "failed to unmarshal payload")
 		log.Default().Error(wErr.Error())
 		return
 	}
-	log.Default().Debug(fmt.Sprintf("WebRTC signaling message received: %v", payload))
-
-	switch payload.State.Type {
-	case webRTCMQTTMsgTypeSignaling:
-		w.mu.RLock()
-		if _, ok := w.sem[payload.State.ROSTopic]; ok {
-			w.mu.RUnlock()
-			log.Default().Error(fmt.Sprintf("There is an existing subscriber on topic [%s]", payload.State.ROSTopic))
-			return
-		}
-		w.mu.RUnlock()
-		w.mu.Lock()
-		w.sem[payload.State.ROSTopic] = struct{}{}
-		w.frameCh[payload.State.ROSTopic] = make(chan []byte, 64)
-		w.enableCh[payload.State.ROSTopic] = make(chan bool, 1)
-		w.closeCh[payload.State.ROSTopic] = make(chan struct{})
-		w.errCh[payload.State.ROSTopic] = make(chan error, 1)
-		w.mu.Unlock()
-		w.signalingHandler(payload)
-	case webRTCMQTTMsgTypeNegotiating:
-		w.negotiatingHandler(payload)
-	case webRTCMQTTMsgTypeNegotiated:
-	default:
-		wErr := fmt.Errorf("invalid payload type: %s", payload.State.Type)
-		log.Default().Error(wErr.Error())
-		return
-	}
+	w.messageHandler(payload)
 }
 
-func (w *WebRTCDaemon) negotiatingHandler(payload common.MQTTWebRTCSDPOfferMsg) {
+func (w *WebRTCDaemon) sdpExchangeHandler(offerPayload common.SignalingMessage) {
 	go func() {
 		ctx, cancel := context.WithCancel(w.ctx)
-		defer func() {
-			if rec := recover(); rec != nil {
-				log.Default().Panic(fmt.Sprintf("recovered from panic: %v: %s", rec, debug.Stack()))
-			}
-			cancel()
-		}()
+		defer cancel()
+		defer recoverFn()
 
 		g, runCtx := errgroup.WithContext(ctx)
 
@@ -208,14 +200,14 @@ func (w *WebRTCDaemon) negotiatingHandler(payload common.MQTTWebRTCSDPOfferMsg) 
 		if err != nil {
 			wErr := errors.Wrapf(err, "failed to create peer connection")
 			log.Default().Error(wErr.Error())
-			w.errCh[payload.State.ROSTopic] <- wErr
+			w.errCh[offerPayload.Payload.TopicName] <- wErr
 			return
 		}
 		defer func() {
 			cErr := pc.Close()
 			if cErr != nil && err == nil {
 				log.Default().Error(fmt.Sprintf("peer connection close: %v", cErr))
-				w.errCh[payload.State.ROSTopic] <- cErr
+				w.errCh[offerPayload.Payload.TopicName] <- cErr
 			}
 		}()
 
@@ -243,18 +235,22 @@ func (w *WebRTCDaemon) negotiatingHandler(payload common.MQTTWebRTCSDPOfferMsg) 
 		})
 
 		// Create a video track and add to peer
-		trackID := fmt.Sprintf("video_%s", strings.ReplaceAll(payload.State.ROSTopic, "/", "_"))
+		sessionID := fmt.Sprintf(
+			"video_%s_%s",
+			strings.ReplaceAll(offerPayload.Payload.TransactionID.String(), "-", "_"),
+			strings.ReplaceAll(offerPayload.Payload.TopicName, "/", "_"),
+		)
 		videoTrack, err := webrtc.NewTrackLocalStaticSample(
 			webrtc.RTPCodecCapability{
 				MimeType: webrtc.MimeTypeH264,
 			},
-			trackID,
+			sessionID,
 			viper.GetString(config.AgentID),
 		)
 		if err != nil {
 			wErr := errors.Wrapf(err, "failed to create track")
 			log.Default().Error(wErr.Error())
-			w.errCh[payload.State.ROSTopic] <- wErr
+			w.errCh[offerPayload.Payload.TopicName] <- wErr
 			return
 		}
 
@@ -262,7 +258,7 @@ func (w *WebRTCDaemon) negotiatingHandler(payload common.MQTTWebRTCSDPOfferMsg) 
 		if err != nil {
 			wErr := errors.Wrapf(err, "failed to add track")
 			log.Default().Error(wErr.Error())
-			w.errCh[payload.State.ROSTopic] <- wErr
+			w.errCh[offerPayload.Payload.TopicName] <- wErr
 			return
 		}
 
@@ -308,7 +304,7 @@ func (w *WebRTCDaemon) negotiatingHandler(payload common.MQTTWebRTCSDPOfferMsg) 
 					select {
 					case <-subCtx.Done():
 						return subCtx.Err()
-					case frame, ok := <-w.frameCh[payload.State.ROSTopic]:
+					case frame, ok := <-w.frameCh[offerPayload.Payload.TopicName]:
 						if !ok {
 							return nil
 						}
@@ -356,18 +352,18 @@ func (w *WebRTCDaemon) negotiatingHandler(payload common.MQTTWebRTCSDPOfferMsg) 
 			}
 		})
 
-		offer, err := w.decodeSessionDescription(payload.State.Offer)
+		offer, err := w.decodeSessionDescription(offerPayload.Payload.SDP)
 		if err != nil {
 			wErr := errors.Wrapf(err, "failed to decode session description")
 			log.Default().Error(wErr.Error())
-			w.errCh[payload.State.ROSTopic] <- wErr
+			w.errCh[offerPayload.Payload.TopicName] <- wErr
 			return
 		}
 
 		if err = pc.SetRemoteDescription(offer); err != nil {
 			wErr := errors.Wrapf(err, "failed to set remote description")
 			log.Default().Error(wErr.Error())
-			w.errCh[payload.State.ROSTopic] <- wErr
+			w.errCh[offerPayload.Payload.TopicName] <- wErr
 			return
 		}
 
@@ -375,7 +371,7 @@ func (w *WebRTCDaemon) negotiatingHandler(payload common.MQTTWebRTCSDPOfferMsg) 
 		if err != nil {
 			wErr := errors.Wrapf(err, "failed to create answer")
 			log.Default().Error(wErr.Error())
-			w.errCh[payload.State.ROSTopic] <- wErr
+			w.errCh[offerPayload.Payload.TopicName] <- wErr
 			return
 		}
 
@@ -384,39 +380,54 @@ func (w *WebRTCDaemon) negotiatingHandler(payload common.MQTTWebRTCSDPOfferMsg) 
 		if err = pc.SetLocalDescription(answer); err != nil {
 			wErr := errors.Wrapf(err, "failed to set local description")
 			log.Default().Error(wErr.Error())
-			w.errCh[payload.State.ROSTopic] <- wErr
+			w.errCh[offerPayload.Payload.TopicName] <- wErr
 			return
 		}
 
 		<-gatherComplete
 
-		w.enableCh[payload.State.ROSTopic] <- true
+		w.enableCh[offerPayload.Payload.TopicName] <- true
 
-		// Encode the session description then publish it back to mqtt
+		// Encode the session description, then publish it back to mqtt
 		sdp, err := w.encodeSessionDescription(pc.LocalDescription())
 		if err != nil {
 			wErr := errors.Wrapf(err, "failed to encode session description")
 			log.Default().Error(wErr.Error())
-			w.errCh[payload.State.ROSTopic] <- wErr
+			w.errCh[offerPayload.Payload.TopicName] <- wErr
 			return
 		}
 
-		sdpPayload := common.MQTTWebRTCSDPAnswerMsg{
-			State: common.WebRTCSDPAnswerMsg{Answer: sdp},
+		// Send the answer back to client
+		sdpPayload := common.SignalingMessage{
+			Header: offerPayload.Header,
+			Payload: common.SignalingBody{
+				TransactionID: offerPayload.Payload.TransactionID,
+				Type:          constants.MsgTypeAnswer,
+				TopicName:     offerPayload.Payload.TopicName,
+				Session:       sessionID,
+				SDP:           sdp,
+			},
 		}
 
-		bSDPPayload, err := json.Marshal(sdpPayload)
-		if err != nil {
-			wErr := errors.Wrapf(err, "failed to encode session description")
-			log.Default().Error(wErr.Error())
-			w.errCh[payload.State.ROSTopic] <- wErr
-			return
-		}
-
-		token := w.cMqtt.Publish(viper.GetString(config.MqttWebRTCAnswerTopic), qosExactlyOnce, false, bSDPPayload)
-		if token.WaitTimeout(5*time.Second) && token.Error() != nil {
-			w.errCh[payload.State.ROSTopic] <- token.Error()
-			return
+		if viper.GetBool(config.AgentEnableMQTT) {
+			bSDPPayload, err := json.Marshal(sdpPayload)
+			if err != nil {
+				wErr := errors.Wrapf(err, "failed to encode session description")
+				log.Default().Error(wErr.Error())
+				w.errCh[offerPayload.Payload.TopicName] <- wErr
+				return
+			}
+			token := w.cMqtt.Publish(viper.GetString(config.MqttWebRTCAnswerTopic), qosExactlyOnce, false, bSDPPayload)
+			if token.WaitTimeout(5*time.Second) && token.Error() != nil {
+				w.errCh[offerPayload.Payload.TopicName] <- errors.Wrap(token.Error(), "failed to publish answer through mqtt")
+				return
+			}
+		} else {
+			err = w.cWebsocket.WriteJSON(sdpPayload)
+			if err != nil {
+				w.errCh[offerPayload.Payload.TopicName] <- errors.Wrap(err, "failed to send answer through websocket")
+				return
+			}
 		}
 
 		done := make(chan error, 1)
@@ -426,14 +437,14 @@ func (w *WebRTCDaemon) negotiatingHandler(payload common.MQTTWebRTCSDPOfferMsg) 
 
 		select {
 		case err = <-done:
-			w.errCh[payload.State.ROSTopic] <- err
+			w.errCh[offerPayload.Payload.TopicName] <- err
 			return
 
 		case <-peerClosed:
 			// Remote hung up: cascade cancel, close PC to unblock RTCP reader, then wait.
 			cancel()
 			_ = pc.Close()
-			w.errCh[payload.State.ROSTopic] <- <-done
+			w.errCh[offerPayload.Payload.TopicName] <- <-done
 			return
 
 		case <-ctx.Done():
@@ -447,10 +458,10 @@ func (w *WebRTCDaemon) negotiatingHandler(payload common.MQTTWebRTCSDPOfferMsg) 
 
 			select {
 			case dErr := <-done:
-				w.errCh[payload.State.ROSTopic] <- dErr
+				w.errCh[offerPayload.Payload.TopicName] <- dErr
 				return
 			case <-shutdownTimer.C:
-				w.errCh[payload.State.ROSTopic] <- fmt.Errorf("shutdown timed out")
+				w.errCh[offerPayload.Payload.TopicName] <- fmt.Errorf("shutdown timed out")
 				return
 			}
 		}
@@ -471,57 +482,54 @@ func (w *WebRTCDaemon) decodeSessionDescription(sdp string) (webrtc.SessionDescr
 }
 
 func (w *WebRTCDaemon) encodeSessionDescription(sdp *webrtc.SessionDescription) (string, error) {
-
 	b, err := json.Marshal(sdp)
 	if err != nil {
-		return "", err
+		return "", errors.Wrap(err, "failed to marshal session description")
 	}
 	return base64.StdEncoding.EncodeToString(b), nil
 }
 
-func (w *WebRTCDaemon) signalingHandler(payload common.MQTTWebRTCSDPOfferMsg) {
+func (w *WebRTCDaemon) topicSubscriptionHandler(payload common.SignalingMessage) {
 	w.wg.Add(1)
 	go func() {
 		ctx, cancel := context.WithCancel(w.ctx)
 
 		defer func() {
-			if rec := recover(); rec != nil {
-				log.Default().Panic(fmt.Sprintf("recovered from panic: %v: %s", rec, debug.Stack()))
-			}
 			cancel()
 			w.wg.Done()
 			w.mu.Lock()
-			delete(w.sem, payload.State.ROSTopic)
-			delete(w.frameCh, payload.State.ROSTopic)
-			delete(w.enableCh, payload.State.ROSTopic)
-			delete(w.closeCh, payload.State.ROSTopic)
+			delete(w.sem, payload.Payload.TopicName)
+			delete(w.frameCh, payload.Payload.TopicName)
+			delete(w.enableCh, payload.Payload.TopicName)
+			delete(w.closeCh, payload.Payload.TopicName)
 			w.mu.Unlock()
 		}()
+		defer recoverFn()
 
 		go func() {
 			err := newCameraSubscriber(
 				ctx,
 				ros_node.Node(),
-				payload.State.ROSTopic,
-				w.frameCh[payload.State.ROSTopic],
-				w.enableCh[payload.State.ROSTopic],
+				payload.Payload.TopicName,
+				w.frameCh[payload.Payload.TopicName],
+				w.enableCh[payload.Payload.TopicName],
 			)
 			if err != nil && !errors.Is(err, context.Canceled) {
 				wErr := errors.Wrap(err, "error creating new camera subscriber")
 				log.Default().Error(wErr.Error())
-				w.errCh[payload.State.ROSTopic] <- wErr
+				w.errCh[payload.Payload.TopicName] <- wErr
 			}
 		}()
 
 		for {
 			select {
 			case <-ctx.Done():
-				log.Default().Info(fmt.Sprintf("Shutting down subscriber node for topic [%s]", payload.State.ROSTopic))
+				log.Default().Info(fmt.Sprintf("Shutting down subscriber node for topic [%s]", payload.Payload.TopicName))
 				return
-			case <-w.closeCh[payload.State.ROSTopic]:
-				log.Default().Info(fmt.Sprintf("Closing subscriber node for topic [%s]", payload.State.ROSTopic))
+			case <-w.closeCh[payload.Payload.TopicName]:
+				log.Default().Info(fmt.Sprintf("Closing subscriber node for topic [%s]", payload.Payload.TopicName))
 				return
-			case err := <-w.errCh[payload.State.ROSTopic]:
+			case err := <-w.errCh[payload.Payload.TopicName]:
 				if !errors.Is(err, context.Canceled) {
 					log.Default().Error(err.Error())
 				}

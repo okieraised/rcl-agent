@@ -163,6 +163,7 @@ func newCameraSubscriber(ctx context.Context, node *humble.Node, topicName strin
 				log.Default().Error(wErr.Error())
 				err = wErr
 			}
+			log.Default().Info("Closed WebRTC topic subscriber")
 		}()
 		ws.AddSubscriptions(sub.Subscription)
 	}

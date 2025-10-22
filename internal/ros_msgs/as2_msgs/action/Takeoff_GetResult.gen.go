@@ -21,7 +21,7 @@ func init() {
 	humble.RegisterService("as2_msgs/action/Takeoff_GetResult", Takeoff_GetResultTypeSupport)
 }
 
-type _Takeoff_GetResultTypeSupport struct{}
+type _Takeoff_GetResultTypeSupport struct {}
 
 func (s _Takeoff_GetResultTypeSupport) Request() humble.MessageTypeSupport {
 	return Takeoff_GetResult_RequestTypeSupport
@@ -87,7 +87,7 @@ type Takeoff_GetResultService struct {
 func NewTakeoff_GetResultService(node *humble.Node, name string, options *humble.ServiceOptions, handler Takeoff_GetResultServiceRequestHandler) (*Takeoff_GetResultService, error) {
 	h := func(rmw *humble.ServiceInfo, msg humble.Message, rs humble.ServiceResponseSender) {
 		m := msg.(*Takeoff_GetResult_Request)
-		responseSender := Takeoff_GetResultServiceResponseSender{sender: rs}
+		responseSender := Takeoff_GetResultServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, Takeoff_GetResultTypeSupport, options, h)

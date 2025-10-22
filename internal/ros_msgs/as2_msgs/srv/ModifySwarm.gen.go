@@ -21,7 +21,7 @@ func init() {
 	humble.RegisterService("as2_msgs/srv/ModifySwarm", ModifySwarmTypeSupport)
 }
 
-type _ModifySwarmTypeSupport struct{}
+type _ModifySwarmTypeSupport struct {}
 
 func (s _ModifySwarmTypeSupport) Request() humble.MessageTypeSupport {
 	return ModifySwarm_RequestTypeSupport
@@ -87,7 +87,7 @@ type ModifySwarmService struct {
 func NewModifySwarmService(node *humble.Node, name string, options *humble.ServiceOptions, handler ModifySwarmServiceRequestHandler) (*ModifySwarmService, error) {
 	h := func(rmw *humble.ServiceInfo, msg humble.Message, rs humble.ServiceResponseSender) {
 		m := msg.(*ModifySwarm_Request)
-		responseSender := ModifySwarmServiceResponseSender{sender: rs}
+		responseSender := ModifySwarmServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, ModifySwarmTypeSupport, options, h)

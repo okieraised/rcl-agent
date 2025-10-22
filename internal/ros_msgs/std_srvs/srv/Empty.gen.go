@@ -21,7 +21,7 @@ func init() {
 	humble.RegisterService("std_srvs/srv/Empty", EmptyTypeSupport)
 }
 
-type _EmptyTypeSupport struct{}
+type _EmptyTypeSupport struct {}
 
 func (s _EmptyTypeSupport) Request() humble.MessageTypeSupport {
 	return Empty_RequestTypeSupport
@@ -87,7 +87,7 @@ type EmptyService struct {
 func NewEmptyService(node *humble.Node, name string, options *humble.ServiceOptions, handler EmptyServiceRequestHandler) (*EmptyService, error) {
 	h := func(rmw *humble.ServiceInfo, msg humble.Message, rs humble.ServiceResponseSender) {
 		m := msg.(*Empty_Request)
-		responseSender := EmptyServiceResponseSender{sender: rs}
+		responseSender := EmptyServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, EmptyTypeSupport, options, h)

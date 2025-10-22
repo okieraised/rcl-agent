@@ -37,7 +37,7 @@ func TestNewWebRTCViewer(t *testing.T) {
 
 	defer humble.Deinit()
 
-	c, err := NewWebRTCViewer(ctx)
+	c, err := NewWebRTCDaemon(ctx)
 	if err != nil {
 		fmt.Println(err)
 	}

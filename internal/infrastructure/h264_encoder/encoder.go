@@ -365,7 +365,7 @@ func NewH264Encoder(parent context.Context, opts *EncoderOptions) (*H264Encoder,
 			}
 			fErr := bufWriter.Flush()
 			if fErr != nil {
-				enc.errCh <- fmt.Errorf("failed to flush bufWriter: %w", wErr)
+				enc.errCh <- fmt.Errorf("failed to flush bufWriter: %w", fErr)
 				break
 			}
 		}

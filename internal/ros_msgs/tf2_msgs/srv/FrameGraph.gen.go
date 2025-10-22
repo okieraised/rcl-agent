@@ -21,7 +21,7 @@ func init() {
 	humble.RegisterService("tf2_msgs/srv/FrameGraph", FrameGraphTypeSupport)
 }
 
-type _FrameGraphTypeSupport struct{}
+type _FrameGraphTypeSupport struct {}
 
 func (s _FrameGraphTypeSupport) Request() humble.MessageTypeSupport {
 	return FrameGraph_RequestTypeSupport
@@ -87,7 +87,7 @@ type FrameGraphService struct {
 func NewFrameGraphService(node *humble.Node, name string, options *humble.ServiceOptions, handler FrameGraphServiceRequestHandler) (*FrameGraphService, error) {
 	h := func(rmw *humble.ServiceInfo, msg humble.Message, rs humble.ServiceResponseSender) {
 		m := msg.(*FrameGraph_Request)
-		responseSender := FrameGraphServiceResponseSender{sender: rs}
+		responseSender := FrameGraphServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, FrameGraphTypeSupport, options, h)

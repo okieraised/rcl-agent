@@ -21,7 +21,7 @@ func init() {
 	humble.RegisterService("as2_msgs/action/Land_SendGoal", Land_SendGoalTypeSupport)
 }
 
-type _Land_SendGoalTypeSupport struct{}
+type _Land_SendGoalTypeSupport struct {}
 
 func (s _Land_SendGoalTypeSupport) Request() humble.MessageTypeSupport {
 	return Land_SendGoal_RequestTypeSupport
@@ -87,7 +87,7 @@ type Land_SendGoalService struct {
 func NewLand_SendGoalService(node *humble.Node, name string, options *humble.ServiceOptions, handler Land_SendGoalServiceRequestHandler) (*Land_SendGoalService, error) {
 	h := func(rmw *humble.ServiceInfo, msg humble.Message, rs humble.ServiceResponseSender) {
 		m := msg.(*Land_SendGoal_Request)
-		responseSender := Land_SendGoalServiceResponseSender{sender: rs}
+		responseSender := Land_SendGoalServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, Land_SendGoalTypeSupport, options, h)

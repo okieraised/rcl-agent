@@ -24,7 +24,7 @@ func init() {
 	humble.RegisterAction("as2_msgs/action/GeneratePolynomialTrajectory", GeneratePolynomialTrajectoryTypeSupport)
 }
 
-type _GeneratePolynomialTrajectoryTypeSupport struct{}
+type _GeneratePolynomialTrajectoryTypeSupport struct {}
 
 func (s _GeneratePolynomialTrajectoryTypeSupport) Goal() humble.MessageTypeSupport {
 	return GeneratePolynomialTrajectory_GoalTypeSupport
@@ -100,7 +100,7 @@ func (s *GeneratePolynomialTrajectoryFeedbackSender) Send(msg *GeneratePolynomia
 	return s.sender.Send(msg)
 }
 
-type GeneratePolynomialTrajectoryGoalHandle struct {
+type GeneratePolynomialTrajectoryGoalHandle struct{
 	*humble.GoalHandle
 
 	Description *GeneratePolynomialTrajectory_Goal
@@ -147,7 +147,7 @@ func (a _GeneratePolynomialTrajectoryAction) TypeSupport() humble.ActionTypeSupp
 	return GeneratePolynomialTrajectoryTypeSupport
 }
 
-type GeneratePolynomialTrajectoryServer struct {
+type GeneratePolynomialTrajectoryServer struct{
 	*humble.ActionServer
 }
 
@@ -163,7 +163,7 @@ type GeneratePolynomialTrajectoryFeedbackHandler func(context.Context, *Generate
 
 type GeneratePolynomialTrajectoryStatusHandler func(context.Context, *action_msgs_msg.GoalStatus)
 
-type GeneratePolynomialTrajectoryClient struct {
+type GeneratePolynomialTrajectoryClient struct{
 	*humble.ActionClient
 }
 

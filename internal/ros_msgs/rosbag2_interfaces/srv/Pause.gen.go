@@ -21,7 +21,7 @@ func init() {
 	humble.RegisterService("rosbag2_interfaces/srv/Pause", PauseTypeSupport)
 }
 
-type _PauseTypeSupport struct{}
+type _PauseTypeSupport struct {}
 
 func (s _PauseTypeSupport) Request() humble.MessageTypeSupport {
 	return Pause_RequestTypeSupport
@@ -87,7 +87,7 @@ type PauseService struct {
 func NewPauseService(node *humble.Node, name string, options *humble.ServiceOptions, handler PauseServiceRequestHandler) (*PauseService, error) {
 	h := func(rmw *humble.ServiceInfo, msg humble.Message, rs humble.ServiceResponseSender) {
 		m := msg.(*Pause_Request)
-		responseSender := PauseServiceResponseSender{sender: rs}
+		responseSender := PauseServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, PauseTypeSupport, options, h)

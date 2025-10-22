@@ -322,7 +322,7 @@ func main() {
 
 	// Init WebRTC viewer
 	g.Go(func() error {
-		cWebRTC, rtcErr := webrtc.NewWebRTCViewer(parentCtx)
+		cWebRTC, rtcErr := webrtc.NewWebRTCDaemon(parentCtx)
 		if rtcErr != nil {
 			wErr := errors.Wrap(err, "failed to initialize new WebRTC service")
 			log.Default().Fatal(wErr.Error())

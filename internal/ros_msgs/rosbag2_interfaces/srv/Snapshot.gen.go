@@ -21,7 +21,7 @@ func init() {
 	humble.RegisterService("rosbag2_interfaces/srv/Snapshot", SnapshotTypeSupport)
 }
 
-type _SnapshotTypeSupport struct{}
+type _SnapshotTypeSupport struct {}
 
 func (s _SnapshotTypeSupport) Request() humble.MessageTypeSupport {
 	return Snapshot_RequestTypeSupport
@@ -87,7 +87,7 @@ type SnapshotService struct {
 func NewSnapshotService(node *humble.Node, name string, options *humble.ServiceOptions, handler SnapshotServiceRequestHandler) (*SnapshotService, error) {
 	h := func(rmw *humble.ServiceInfo, msg humble.Message, rs humble.ServiceResponseSender) {
 		m := msg.(*Snapshot_Request)
-		responseSender := SnapshotServiceResponseSender{sender: rs}
+		responseSender := SnapshotServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, SnapshotTypeSupport, options, h)

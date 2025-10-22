@@ -21,7 +21,7 @@ func init() {
 	humble.RegisterService("as2_msgs/srv/SetControlMode", SetControlModeTypeSupport)
 }
 
-type _SetControlModeTypeSupport struct{}
+type _SetControlModeTypeSupport struct {}
 
 func (s _SetControlModeTypeSupport) Request() humble.MessageTypeSupport {
 	return SetControlMode_RequestTypeSupport
@@ -87,7 +87,7 @@ type SetControlModeService struct {
 func NewSetControlModeService(node *humble.Node, name string, options *humble.ServiceOptions, handler SetControlModeServiceRequestHandler) (*SetControlModeService, error) {
 	h := func(rmw *humble.ServiceInfo, msg humble.Message, rs humble.ServiceResponseSender) {
 		m := msg.(*SetControlMode_Request)
-		responseSender := SetControlModeServiceResponseSender{sender: rs}
+		responseSender := SetControlModeServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, SetControlModeTypeSupport, options, h)

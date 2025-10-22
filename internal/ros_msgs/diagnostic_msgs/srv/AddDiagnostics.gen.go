@@ -21,7 +21,7 @@ func init() {
 	humble.RegisterService("diagnostic_msgs/srv/AddDiagnostics", AddDiagnosticsTypeSupport)
 }
 
-type _AddDiagnosticsTypeSupport struct{}
+type _AddDiagnosticsTypeSupport struct {}
 
 func (s _AddDiagnosticsTypeSupport) Request() humble.MessageTypeSupport {
 	return AddDiagnostics_RequestTypeSupport
@@ -87,7 +87,7 @@ type AddDiagnosticsService struct {
 func NewAddDiagnosticsService(node *humble.Node, name string, options *humble.ServiceOptions, handler AddDiagnosticsServiceRequestHandler) (*AddDiagnosticsService, error) {
 	h := func(rmw *humble.ServiceInfo, msg humble.Message, rs humble.ServiceResponseSender) {
 		m := msg.(*AddDiagnostics_Request)
-		responseSender := AddDiagnosticsServiceResponseSender{sender: rs}
+		responseSender := AddDiagnosticsServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, AddDiagnosticsTypeSupport, options, h)

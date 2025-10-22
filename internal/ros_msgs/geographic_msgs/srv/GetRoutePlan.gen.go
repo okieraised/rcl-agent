@@ -21,7 +21,7 @@ func init() {
 	humble.RegisterService("geographic_msgs/srv/GetRoutePlan", GetRoutePlanTypeSupport)
 }
 
-type _GetRoutePlanTypeSupport struct{}
+type _GetRoutePlanTypeSupport struct {}
 
 func (s _GetRoutePlanTypeSupport) Request() humble.MessageTypeSupport {
 	return GetRoutePlan_RequestTypeSupport
@@ -87,7 +87,7 @@ type GetRoutePlanService struct {
 func NewGetRoutePlanService(node *humble.Node, name string, options *humble.ServiceOptions, handler GetRoutePlanServiceRequestHandler) (*GetRoutePlanService, error) {
 	h := func(rmw *humble.ServiceInfo, msg humble.Message, rs humble.ServiceResponseSender) {
 		m := msg.(*GetRoutePlan_Request)
-		responseSender := GetRoutePlanServiceResponseSender{sender: rs}
+		responseSender := GetRoutePlanServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, GetRoutePlanTypeSupport, options, h)

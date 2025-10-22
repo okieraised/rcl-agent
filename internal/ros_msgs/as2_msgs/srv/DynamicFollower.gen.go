@@ -21,7 +21,7 @@ func init() {
 	humble.RegisterService("as2_msgs/srv/DynamicFollower", DynamicFollowerTypeSupport)
 }
 
-type _DynamicFollowerTypeSupport struct{}
+type _DynamicFollowerTypeSupport struct {}
 
 func (s _DynamicFollowerTypeSupport) Request() humble.MessageTypeSupport {
 	return DynamicFollower_RequestTypeSupport
@@ -87,7 +87,7 @@ type DynamicFollowerService struct {
 func NewDynamicFollowerService(node *humble.Node, name string, options *humble.ServiceOptions, handler DynamicFollowerServiceRequestHandler) (*DynamicFollowerService, error) {
 	h := func(rmw *humble.ServiceInfo, msg humble.Message, rs humble.ServiceResponseSender) {
 		m := msg.(*DynamicFollower_Request)
-		responseSender := DynamicFollowerServiceResponseSender{sender: rs}
+		responseSender := DynamicFollowerServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, DynamicFollowerTypeSupport, options, h)

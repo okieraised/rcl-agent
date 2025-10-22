@@ -21,7 +21,7 @@ func init() {
 	humble.RegisterService("lifecycle_msgs/srv/ChangeState", ChangeStateTypeSupport)
 }
 
-type _ChangeStateTypeSupport struct{}
+type _ChangeStateTypeSupport struct {}
 
 func (s _ChangeStateTypeSupport) Request() humble.MessageTypeSupport {
 	return ChangeState_RequestTypeSupport
@@ -87,7 +87,7 @@ type ChangeStateService struct {
 func NewChangeStateService(node *humble.Node, name string, options *humble.ServiceOptions, handler ChangeStateServiceRequestHandler) (*ChangeStateService, error) {
 	h := func(rmw *humble.ServiceInfo, msg humble.Message, rs humble.ServiceResponseSender) {
 		m := msg.(*ChangeState_Request)
-		responseSender := ChangeStateServiceResponseSender{sender: rs}
+		responseSender := ChangeStateServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, ChangeStateTypeSupport, options, h)

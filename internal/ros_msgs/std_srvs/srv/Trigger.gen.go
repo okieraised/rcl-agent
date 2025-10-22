@@ -21,7 +21,7 @@ func init() {
 	humble.RegisterService("std_srvs/srv/Trigger", TriggerTypeSupport)
 }
 
-type _TriggerTypeSupport struct{}
+type _TriggerTypeSupport struct {}
 
 func (s _TriggerTypeSupport) Request() humble.MessageTypeSupport {
 	return Trigger_RequestTypeSupport
@@ -87,7 +87,7 @@ type TriggerService struct {
 func NewTriggerService(node *humble.Node, name string, options *humble.ServiceOptions, handler TriggerServiceRequestHandler) (*TriggerService, error) {
 	h := func(rmw *humble.ServiceInfo, msg humble.Message, rs humble.ServiceResponseSender) {
 		m := msg.(*Trigger_Request)
-		responseSender := TriggerServiceResponseSender{sender: rs}
+		responseSender := TriggerServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, TriggerTypeSupport, options, h)

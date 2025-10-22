@@ -21,7 +21,7 @@ func init() {
 	humble.RegisterService("rcl_interfaces/srv/SetParametersAtomically", SetParametersAtomicallyTypeSupport)
 }
 
-type _SetParametersAtomicallyTypeSupport struct{}
+type _SetParametersAtomicallyTypeSupport struct {}
 
 func (s _SetParametersAtomicallyTypeSupport) Request() humble.MessageTypeSupport {
 	return SetParametersAtomically_RequestTypeSupport
@@ -87,7 +87,7 @@ type SetParametersAtomicallyService struct {
 func NewSetParametersAtomicallyService(node *humble.Node, name string, options *humble.ServiceOptions, handler SetParametersAtomicallyServiceRequestHandler) (*SetParametersAtomicallyService, error) {
 	h := func(rmw *humble.ServiceInfo, msg humble.Message, rs humble.ServiceResponseSender) {
 		m := msg.(*SetParametersAtomically_Request)
-		responseSender := SetParametersAtomicallyServiceResponseSender{sender: rs}
+		responseSender := SetParametersAtomicallyServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, SetParametersAtomicallyTypeSupport, options, h)

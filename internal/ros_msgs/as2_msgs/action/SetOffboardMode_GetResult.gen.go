@@ -21,7 +21,7 @@ func init() {
 	humble.RegisterService("as2_msgs/action/SetOffboardMode_GetResult", SetOffboardMode_GetResultTypeSupport)
 }
 
-type _SetOffboardMode_GetResultTypeSupport struct{}
+type _SetOffboardMode_GetResultTypeSupport struct {}
 
 func (s _SetOffboardMode_GetResultTypeSupport) Request() humble.MessageTypeSupport {
 	return SetOffboardMode_GetResult_RequestTypeSupport
@@ -87,7 +87,7 @@ type SetOffboardMode_GetResultService struct {
 func NewSetOffboardMode_GetResultService(node *humble.Node, name string, options *humble.ServiceOptions, handler SetOffboardMode_GetResultServiceRequestHandler) (*SetOffboardMode_GetResultService, error) {
 	h := func(rmw *humble.ServiceInfo, msg humble.Message, rs humble.ServiceResponseSender) {
 		m := msg.(*SetOffboardMode_GetResult_Request)
-		responseSender := SetOffboardMode_GetResultServiceResponseSender{sender: rs}
+		responseSender := SetOffboardMode_GetResultServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, SetOffboardMode_GetResultTypeSupport, options, h)

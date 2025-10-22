@@ -24,7 +24,7 @@ func init() {
 	humble.RegisterAction("as2_msgs/action/NavigateToPoint", NavigateToPointTypeSupport)
 }
 
-type _NavigateToPointTypeSupport struct{}
+type _NavigateToPointTypeSupport struct {}
 
 func (s _NavigateToPointTypeSupport) Goal() humble.MessageTypeSupport {
 	return NavigateToPoint_GoalTypeSupport
@@ -100,7 +100,7 @@ func (s *NavigateToPointFeedbackSender) Send(msg *NavigateToPoint_Feedback) erro
 	return s.sender.Send(msg)
 }
 
-type NavigateToPointGoalHandle struct {
+type NavigateToPointGoalHandle struct{
 	*humble.GoalHandle
 
 	Description *NavigateToPoint_Goal
@@ -147,7 +147,7 @@ func (a _NavigateToPointAction) TypeSupport() humble.ActionTypeSupport {
 	return NavigateToPointTypeSupport
 }
 
-type NavigateToPointServer struct {
+type NavigateToPointServer struct{
 	*humble.ActionServer
 }
 
@@ -163,7 +163,7 @@ type NavigateToPointFeedbackHandler func(context.Context, *NavigateToPoint_Feedb
 
 type NavigateToPointStatusHandler func(context.Context, *action_msgs_msg.GoalStatus)
 
-type NavigateToPointClient struct {
+type NavigateToPointClient struct{
 	*humble.ActionClient
 }
 

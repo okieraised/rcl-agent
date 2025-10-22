@@ -21,7 +21,7 @@ func init() {
 	humble.RegisterService("as2_msgs/srv/DynamicLand", DynamicLandTypeSupport)
 }
 
-type _DynamicLandTypeSupport struct{}
+type _DynamicLandTypeSupport struct {}
 
 func (s _DynamicLandTypeSupport) Request() humble.MessageTypeSupport {
 	return DynamicLand_RequestTypeSupport
@@ -87,7 +87,7 @@ type DynamicLandService struct {
 func NewDynamicLandService(node *humble.Node, name string, options *humble.ServiceOptions, handler DynamicLandServiceRequestHandler) (*DynamicLandService, error) {
 	h := func(rmw *humble.ServiceInfo, msg humble.Message, rs humble.ServiceResponseSender) {
 		m := msg.(*DynamicLand_Request)
-		responseSender := DynamicLandServiceResponseSender{sender: rs}
+		responseSender := DynamicLandServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, DynamicLandTypeSupport, options, h)

@@ -21,7 +21,7 @@ func init() {
 	humble.RegisterService("as2_msgs/action/FollowReference_GetResult", FollowReference_GetResultTypeSupport)
 }
 
-type _FollowReference_GetResultTypeSupport struct{}
+type _FollowReference_GetResultTypeSupport struct {}
 
 func (s _FollowReference_GetResultTypeSupport) Request() humble.MessageTypeSupport {
 	return FollowReference_GetResult_RequestTypeSupport
@@ -87,7 +87,7 @@ type FollowReference_GetResultService struct {
 func NewFollowReference_GetResultService(node *humble.Node, name string, options *humble.ServiceOptions, handler FollowReference_GetResultServiceRequestHandler) (*FollowReference_GetResultService, error) {
 	h := func(rmw *humble.ServiceInfo, msg humble.Message, rs humble.ServiceResponseSender) {
 		m := msg.(*FollowReference_GetResult_Request)
-		responseSender := FollowReference_GetResultServiceResponseSender{sender: rs}
+		responseSender := FollowReference_GetResultServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, FollowReference_GetResultTypeSupport, options, h)

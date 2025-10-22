@@ -21,7 +21,7 @@ func init() {
 	humble.RegisterService("as2_msgs/action/DetectArucoMarkers_GetResult", DetectArucoMarkers_GetResultTypeSupport)
 }
 
-type _DetectArucoMarkers_GetResultTypeSupport struct{}
+type _DetectArucoMarkers_GetResultTypeSupport struct {}
 
 func (s _DetectArucoMarkers_GetResultTypeSupport) Request() humble.MessageTypeSupport {
 	return DetectArucoMarkers_GetResult_RequestTypeSupport
@@ -87,7 +87,7 @@ type DetectArucoMarkers_GetResultService struct {
 func NewDetectArucoMarkers_GetResultService(node *humble.Node, name string, options *humble.ServiceOptions, handler DetectArucoMarkers_GetResultServiceRequestHandler) (*DetectArucoMarkers_GetResultService, error) {
 	h := func(rmw *humble.ServiceInfo, msg humble.Message, rs humble.ServiceResponseSender) {
 		m := msg.(*DetectArucoMarkers_GetResult_Request)
-		responseSender := DetectArucoMarkers_GetResultServiceResponseSender{sender: rs}
+		responseSender := DetectArucoMarkers_GetResultServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, DetectArucoMarkers_GetResultTypeSupport, options, h)

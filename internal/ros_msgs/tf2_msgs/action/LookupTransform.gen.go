@@ -24,7 +24,7 @@ func init() {
 	humble.RegisterAction("tf2_msgs/action/LookupTransform", LookupTransformTypeSupport)
 }
 
-type _LookupTransformTypeSupport struct{}
+type _LookupTransformTypeSupport struct {}
 
 func (s _LookupTransformTypeSupport) Goal() humble.MessageTypeSupport {
 	return LookupTransform_GoalTypeSupport
@@ -100,7 +100,7 @@ func (s *LookupTransformFeedbackSender) Send(msg *LookupTransform_Feedback) erro
 	return s.sender.Send(msg)
 }
 
-type LookupTransformGoalHandle struct {
+type LookupTransformGoalHandle struct{
 	*humble.GoalHandle
 
 	Description *LookupTransform_Goal
@@ -147,7 +147,7 @@ func (a _LookupTransformAction) TypeSupport() humble.ActionTypeSupport {
 	return LookupTransformTypeSupport
 }
 
-type LookupTransformServer struct {
+type LookupTransformServer struct{
 	*humble.ActionServer
 }
 
@@ -163,7 +163,7 @@ type LookupTransformFeedbackHandler func(context.Context, *LookupTransform_Feedb
 
 type LookupTransformStatusHandler func(context.Context, *action_msgs_msg.GoalStatus)
 
-type LookupTransformClient struct {
+type LookupTransformClient struct{
 	*humble.ActionClient
 }
 

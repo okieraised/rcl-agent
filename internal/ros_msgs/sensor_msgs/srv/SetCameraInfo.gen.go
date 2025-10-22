@@ -21,7 +21,7 @@ func init() {
 	humble.RegisterService("sensor_msgs/srv/SetCameraInfo", SetCameraInfoTypeSupport)
 }
 
-type _SetCameraInfoTypeSupport struct{}
+type _SetCameraInfoTypeSupport struct {}
 
 func (s _SetCameraInfoTypeSupport) Request() humble.MessageTypeSupport {
 	return SetCameraInfo_RequestTypeSupport
@@ -87,7 +87,7 @@ type SetCameraInfoService struct {
 func NewSetCameraInfoService(node *humble.Node, name string, options *humble.ServiceOptions, handler SetCameraInfoServiceRequestHandler) (*SetCameraInfoService, error) {
 	h := func(rmw *humble.ServiceInfo, msg humble.Message, rs humble.ServiceResponseSender) {
 		m := msg.(*SetCameraInfo_Request)
-		responseSender := SetCameraInfoServiceResponseSender{sender: rs}
+		responseSender := SetCameraInfoServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, SetCameraInfoTypeSupport, options, h)

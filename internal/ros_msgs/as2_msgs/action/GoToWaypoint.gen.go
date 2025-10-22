@@ -24,7 +24,7 @@ func init() {
 	humble.RegisterAction("as2_msgs/action/GoToWaypoint", GoToWaypointTypeSupport)
 }
 
-type _GoToWaypointTypeSupport struct{}
+type _GoToWaypointTypeSupport struct {}
 
 func (s _GoToWaypointTypeSupport) Goal() humble.MessageTypeSupport {
 	return GoToWaypoint_GoalTypeSupport
@@ -100,7 +100,7 @@ func (s *GoToWaypointFeedbackSender) Send(msg *GoToWaypoint_Feedback) error {
 	return s.sender.Send(msg)
 }
 
-type GoToWaypointGoalHandle struct {
+type GoToWaypointGoalHandle struct{
 	*humble.GoalHandle
 
 	Description *GoToWaypoint_Goal
@@ -147,7 +147,7 @@ func (a _GoToWaypointAction) TypeSupport() humble.ActionTypeSupport {
 	return GoToWaypointTypeSupport
 }
 
-type GoToWaypointServer struct {
+type GoToWaypointServer struct{
 	*humble.ActionServer
 }
 
@@ -163,7 +163,7 @@ type GoToWaypointFeedbackHandler func(context.Context, *GoToWaypoint_FeedbackMes
 
 type GoToWaypointStatusHandler func(context.Context, *action_msgs_msg.GoalStatus)
 
-type GoToWaypointClient struct {
+type GoToWaypointClient struct{
 	*humble.ActionClient
 }
 

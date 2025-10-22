@@ -21,7 +21,7 @@ func init() {
 	humble.RegisterService("as2_msgs/action/SetOffboardMode_SendGoal", SetOffboardMode_SendGoalTypeSupport)
 }
 
-type _SetOffboardMode_SendGoalTypeSupport struct{}
+type _SetOffboardMode_SendGoalTypeSupport struct {}
 
 func (s _SetOffboardMode_SendGoalTypeSupport) Request() humble.MessageTypeSupport {
 	return SetOffboardMode_SendGoal_RequestTypeSupport
@@ -87,7 +87,7 @@ type SetOffboardMode_SendGoalService struct {
 func NewSetOffboardMode_SendGoalService(node *humble.Node, name string, options *humble.ServiceOptions, handler SetOffboardMode_SendGoalServiceRequestHandler) (*SetOffboardMode_SendGoalService, error) {
 	h := func(rmw *humble.ServiceInfo, msg humble.Message, rs humble.ServiceResponseSender) {
 		m := msg.(*SetOffboardMode_SendGoal_Request)
-		responseSender := SetOffboardMode_SendGoalServiceResponseSender{sender: rs}
+		responseSender := SetOffboardMode_SendGoalServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, SetOffboardMode_SendGoalTypeSupport, options, h)

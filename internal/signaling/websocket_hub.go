@@ -11,13 +11,13 @@ import (
 
 type WebsocketHub struct {
 	tracer     trace.Tracer                 // Tracing client
-	clients    map[*WSClient]bool           // Registered clients.
+	clients    map[*WebsocketClient]bool    // Registered clients.
 	broadcast  chan common.SignalingMessage // Inbound messages from the clients.
-	register   chan *WSClient               // Register requests from the clients.
-	unregister chan *WSClient               // Unregistered clients.
+	register   chan *WebsocketClient        // Register requests from the clients.
+	unregister chan *WebsocketClient        // Unregistered clients.
 }
 
-func (h *WebsocketHub) GetClients() map[*WSClient]bool {
+func (h *WebsocketHub) GetClients() map[*WebsocketClient]bool {
 	return h.clients
 }
 
@@ -25,11 +25,11 @@ func (h *WebsocketHub) GetBroadcast() chan common.SignalingMessage {
 	return h.broadcast
 }
 
-func (h *WebsocketHub) GetRegister() chan *WSClient {
+func (h *WebsocketHub) GetRegister() chan *WebsocketClient {
 	return h.register
 }
 
-func (h *WebsocketHub) GetUnregister() chan *WSClient {
+func (h *WebsocketHub) GetUnregister() chan *WebsocketClient {
 	return h.unregister
 }
 
@@ -44,10 +44,10 @@ func GetWebsocketHubInstance() *WebsocketHub {
 
 func NewWebsocketHub() *WebsocketHub {
 	webRTCHub = &WebsocketHub{
-		clients:    make(map[*WSClient]bool),
+		clients:    make(map[*WebsocketClient]bool),
 		broadcast:  make(chan common.SignalingMessage),
-		register:   make(chan *WSClient),
-		unregister: make(chan *WSClient),
+		register:   make(chan *WebsocketClient),
+		unregister: make(chan *WebsocketClient),
 	}
 
 	return webRTCHub
@@ -72,7 +72,7 @@ func (h *WebsocketHub) Run(ctx context.Context) {
 	}()
 }
 
-func (h *WebsocketHub) RegisterNewClient(client *WSClient) {
+func (h *WebsocketHub) RegisterNewClient(client *WebsocketClient) {
 	if _, ok := h.clients[client]; !ok {
 		log.Default().Debug(fmt.Sprintf("Registering new client with id [%s]", client.ID.String()))
 		h.clients[client] = true
@@ -82,7 +82,7 @@ func (h *WebsocketHub) RegisterNewClient(client *WSClient) {
 	log.Default().Debug(fmt.Sprintf("There are [%d] clients connected", len(h.clients)))
 }
 
-func (h *WebsocketHub) RemoveClient(client *WSClient) {
+func (h *WebsocketHub) RemoveClient(client *WebsocketClient) {
 	if _, ok := h.clients[client]; ok {
 		delete(h.clients, client)
 		close(client.send)

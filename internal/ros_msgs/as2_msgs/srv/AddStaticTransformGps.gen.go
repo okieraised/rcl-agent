@@ -21,7 +21,7 @@ func init() {
 	humble.RegisterService("as2_msgs/srv/AddStaticTransformGps", AddStaticTransformGpsTypeSupport)
 }
 
-type _AddStaticTransformGpsTypeSupport struct{}
+type _AddStaticTransformGpsTypeSupport struct {}
 
 func (s _AddStaticTransformGpsTypeSupport) Request() humble.MessageTypeSupport {
 	return AddStaticTransformGps_RequestTypeSupport
@@ -87,7 +87,7 @@ type AddStaticTransformGpsService struct {
 func NewAddStaticTransformGpsService(node *humble.Node, name string, options *humble.ServiceOptions, handler AddStaticTransformGpsServiceRequestHandler) (*AddStaticTransformGpsService, error) {
 	h := func(rmw *humble.ServiceInfo, msg humble.Message, rs humble.ServiceResponseSender) {
 		m := msg.(*AddStaticTransformGps_Request)
-		responseSender := AddStaticTransformGpsServiceResponseSender{sender: rs}
+		responseSender := AddStaticTransformGpsServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, AddStaticTransformGpsTypeSupport, options, h)

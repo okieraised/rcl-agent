@@ -21,7 +21,7 @@ func init() {
 	humble.RegisterService("as2_msgs/srv/AddStaticTransform", AddStaticTransformTypeSupport)
 }
 
-type _AddStaticTransformTypeSupport struct{}
+type _AddStaticTransformTypeSupport struct {}
 
 func (s _AddStaticTransformTypeSupport) Request() humble.MessageTypeSupport {
 	return AddStaticTransform_RequestTypeSupport
@@ -87,7 +87,7 @@ type AddStaticTransformService struct {
 func NewAddStaticTransformService(node *humble.Node, name string, options *humble.ServiceOptions, handler AddStaticTransformServiceRequestHandler) (*AddStaticTransformService, error) {
 	h := func(rmw *humble.ServiceInfo, msg humble.Message, rs humble.ServiceResponseSender) {
 		m := msg.(*AddStaticTransform_Request)
-		responseSender := AddStaticTransformServiceResponseSender{sender: rs}
+		responseSender := AddStaticTransformServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, AddStaticTransformTypeSupport, options, h)

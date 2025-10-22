@@ -21,7 +21,7 @@ func init() {
 	humble.RegisterService("as2_msgs/action/FollowPath_GetResult", FollowPath_GetResultTypeSupport)
 }
 
-type _FollowPath_GetResultTypeSupport struct{}
+type _FollowPath_GetResultTypeSupport struct {}
 
 func (s _FollowPath_GetResultTypeSupport) Request() humble.MessageTypeSupport {
 	return FollowPath_GetResult_RequestTypeSupport
@@ -87,7 +87,7 @@ type FollowPath_GetResultService struct {
 func NewFollowPath_GetResultService(node *humble.Node, name string, options *humble.ServiceOptions, handler FollowPath_GetResultServiceRequestHandler) (*FollowPath_GetResultService, error) {
 	h := func(rmw *humble.ServiceInfo, msg humble.Message, rs humble.ServiceResponseSender) {
 		m := msg.(*FollowPath_GetResult_Request)
-		responseSender := FollowPath_GetResultServiceResponseSender{sender: rs}
+		responseSender := FollowPath_GetResultServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, FollowPath_GetResultTypeSupport, options, h)

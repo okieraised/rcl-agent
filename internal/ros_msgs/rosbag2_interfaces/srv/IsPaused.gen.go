@@ -21,7 +21,7 @@ func init() {
 	humble.RegisterService("rosbag2_interfaces/srv/IsPaused", IsPausedTypeSupport)
 }
 
-type _IsPausedTypeSupport struct{}
+type _IsPausedTypeSupport struct {}
 
 func (s _IsPausedTypeSupport) Request() humble.MessageTypeSupport {
 	return IsPaused_RequestTypeSupport
@@ -87,7 +87,7 @@ type IsPausedService struct {
 func NewIsPausedService(node *humble.Node, name string, options *humble.ServiceOptions, handler IsPausedServiceRequestHandler) (*IsPausedService, error) {
 	h := func(rmw *humble.ServiceInfo, msg humble.Message, rs humble.ServiceResponseSender) {
 		m := msg.(*IsPaused_Request)
-		responseSender := IsPausedServiceResponseSender{sender: rs}
+		responseSender := IsPausedServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, IsPausedTypeSupport, options, h)

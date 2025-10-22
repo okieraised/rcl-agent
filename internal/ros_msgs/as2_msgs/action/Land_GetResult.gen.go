@@ -21,7 +21,7 @@ func init() {
 	humble.RegisterService("as2_msgs/action/Land_GetResult", Land_GetResultTypeSupport)
 }
 
-type _Land_GetResultTypeSupport struct{}
+type _Land_GetResultTypeSupport struct {}
 
 func (s _Land_GetResultTypeSupport) Request() humble.MessageTypeSupport {
 	return Land_GetResult_RequestTypeSupport
@@ -87,7 +87,7 @@ type Land_GetResultService struct {
 func NewLand_GetResultService(node *humble.Node, name string, options *humble.ServiceOptions, handler Land_GetResultServiceRequestHandler) (*Land_GetResultService, error) {
 	h := func(rmw *humble.ServiceInfo, msg humble.Message, rs humble.ServiceResponseSender) {
 		m := msg.(*Land_GetResult_Request)
-		responseSender := Land_GetResultServiceResponseSender{sender: rs}
+		responseSender := Land_GetResultServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, Land_GetResultTypeSupport, options, h)

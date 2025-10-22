@@ -21,7 +21,7 @@ func init() {
 	humble.RegisterService("as2_msgs/srv/SetPlatformStateMachineEvent", SetPlatformStateMachineEventTypeSupport)
 }
 
-type _SetPlatformStateMachineEventTypeSupport struct{}
+type _SetPlatformStateMachineEventTypeSupport struct {}
 
 func (s _SetPlatformStateMachineEventTypeSupport) Request() humble.MessageTypeSupport {
 	return SetPlatformStateMachineEvent_RequestTypeSupport
@@ -87,7 +87,7 @@ type SetPlatformStateMachineEventService struct {
 func NewSetPlatformStateMachineEventService(node *humble.Node, name string, options *humble.ServiceOptions, handler SetPlatformStateMachineEventServiceRequestHandler) (*SetPlatformStateMachineEventService, error) {
 	h := func(rmw *humble.ServiceInfo, msg humble.Message, rs humble.ServiceResponseSender) {
 		m := msg.(*SetPlatformStateMachineEvent_Request)
-		responseSender := SetPlatformStateMachineEventServiceResponseSender{sender: rs}
+		responseSender := SetPlatformStateMachineEventServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, SetPlatformStateMachineEventTypeSupport, options, h)

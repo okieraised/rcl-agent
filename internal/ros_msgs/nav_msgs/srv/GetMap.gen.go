@@ -21,7 +21,7 @@ func init() {
 	humble.RegisterService("nav_msgs/srv/GetMap", GetMapTypeSupport)
 }
 
-type _GetMapTypeSupport struct{}
+type _GetMapTypeSupport struct {}
 
 func (s _GetMapTypeSupport) Request() humble.MessageTypeSupport {
 	return GetMap_RequestTypeSupport
@@ -87,7 +87,7 @@ type GetMapService struct {
 func NewGetMapService(node *humble.Node, name string, options *humble.ServiceOptions, handler GetMapServiceRequestHandler) (*GetMapService, error) {
 	h := func(rmw *humble.ServiceInfo, msg humble.Message, rs humble.ServiceResponseSender) {
 		m := msg.(*GetMap_Request)
-		responseSender := GetMapServiceResponseSender{sender: rs}
+		responseSender := GetMapServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, GetMapTypeSupport, options, h)

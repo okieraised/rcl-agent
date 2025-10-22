@@ -24,7 +24,7 @@ func init() {
 	humble.RegisterAction("as2_msgs/action/Land", LandTypeSupport)
 }
 
-type _LandTypeSupport struct{}
+type _LandTypeSupport struct {}
 
 func (s _LandTypeSupport) Goal() humble.MessageTypeSupport {
 	return Land_GoalTypeSupport
@@ -100,7 +100,7 @@ func (s *LandFeedbackSender) Send(msg *Land_Feedback) error {
 	return s.sender.Send(msg)
 }
 
-type LandGoalHandle struct {
+type LandGoalHandle struct{
 	*humble.GoalHandle
 
 	Description *Land_Goal
@@ -147,7 +147,7 @@ func (a _LandAction) TypeSupport() humble.ActionTypeSupport {
 	return LandTypeSupport
 }
 
-type LandServer struct {
+type LandServer struct{
 	*humble.ActionServer
 }
 
@@ -163,7 +163,7 @@ type LandFeedbackHandler func(context.Context, *Land_FeedbackMessage)
 
 type LandStatusHandler func(context.Context, *action_msgs_msg.GoalStatus)
 
-type LandClient struct {
+type LandClient struct{
 	*humble.ActionClient
 }
 

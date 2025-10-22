@@ -21,7 +21,7 @@ func init() {
 	humble.RegisterService("action_msgs/srv/CancelGoal", CancelGoalTypeSupport)
 }
 
-type _CancelGoalTypeSupport struct{}
+type _CancelGoalTypeSupport struct {}
 
 func (s _CancelGoalTypeSupport) Request() humble.MessageTypeSupport {
 	return CancelGoal_RequestTypeSupport
@@ -87,7 +87,7 @@ type CancelGoalService struct {
 func NewCancelGoalService(node *humble.Node, name string, options *humble.ServiceOptions, handler CancelGoalServiceRequestHandler) (*CancelGoalService, error) {
 	h := func(rmw *humble.ServiceInfo, msg humble.Message, rs humble.ServiceResponseSender) {
 		m := msg.(*CancelGoal_Request)
-		responseSender := CancelGoalServiceResponseSender{sender: rs}
+		responseSender := CancelGoalServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, CancelGoalTypeSupport, options, h)

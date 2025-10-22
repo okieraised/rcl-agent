@@ -21,7 +21,7 @@ func init() {
 	humble.RegisterService("tf2_msgs/action/LookupTransform_SendGoal", LookupTransform_SendGoalTypeSupport)
 }
 
-type _LookupTransform_SendGoalTypeSupport struct{}
+type _LookupTransform_SendGoalTypeSupport struct {}
 
 func (s _LookupTransform_SendGoalTypeSupport) Request() humble.MessageTypeSupport {
 	return LookupTransform_SendGoal_RequestTypeSupport
@@ -87,7 +87,7 @@ type LookupTransform_SendGoalService struct {
 func NewLookupTransform_SendGoalService(node *humble.Node, name string, options *humble.ServiceOptions, handler LookupTransform_SendGoalServiceRequestHandler) (*LookupTransform_SendGoalService, error) {
 	h := func(rmw *humble.ServiceInfo, msg humble.Message, rs humble.ServiceResponseSender) {
 		m := msg.(*LookupTransform_SendGoal_Request)
-		responseSender := LookupTransform_SendGoalServiceResponseSender{sender: rs}
+		responseSender := LookupTransform_SendGoalServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, LookupTransform_SendGoalTypeSupport, options, h)

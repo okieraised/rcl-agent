@@ -21,7 +21,7 @@ func init() {
 	humble.RegisterService("as2_msgs/srv/GetOrigin", GetOriginTypeSupport)
 }
 
-type _GetOriginTypeSupport struct{}
+type _GetOriginTypeSupport struct {}
 
 func (s _GetOriginTypeSupport) Request() humble.MessageTypeSupport {
 	return GetOrigin_RequestTypeSupport
@@ -87,7 +87,7 @@ type GetOriginService struct {
 func NewGetOriginService(node *humble.Node, name string, options *humble.ServiceOptions, handler GetOriginServiceRequestHandler) (*GetOriginService, error) {
 	h := func(rmw *humble.ServiceInfo, msg humble.Message, rs humble.ServiceResponseSender) {
 		m := msg.(*GetOrigin_Request)
-		responseSender := GetOriginServiceResponseSender{sender: rs}
+		responseSender := GetOriginServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, GetOriginTypeSupport, options, h)

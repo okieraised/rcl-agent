@@ -21,7 +21,7 @@ func init() {
 	humble.RegisterService("lifecycle_msgs/srv/GetAvailableTransitions", GetAvailableTransitionsTypeSupport)
 }
 
-type _GetAvailableTransitionsTypeSupport struct{}
+type _GetAvailableTransitionsTypeSupport struct {}
 
 func (s _GetAvailableTransitionsTypeSupport) Request() humble.MessageTypeSupport {
 	return GetAvailableTransitions_RequestTypeSupport
@@ -87,7 +87,7 @@ type GetAvailableTransitionsService struct {
 func NewGetAvailableTransitionsService(node *humble.Node, name string, options *humble.ServiceOptions, handler GetAvailableTransitionsServiceRequestHandler) (*GetAvailableTransitionsService, error) {
 	h := func(rmw *humble.ServiceInfo, msg humble.Message, rs humble.ServiceResponseSender) {
 		m := msg.(*GetAvailableTransitions_Request)
-		responseSender := GetAvailableTransitionsServiceResponseSender{sender: rs}
+		responseSender := GetAvailableTransitionsServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, GetAvailableTransitionsTypeSupport, options, h)

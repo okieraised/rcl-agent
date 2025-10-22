@@ -21,7 +21,7 @@ func init() {
 	humble.RegisterService("as2_msgs/action/SwarmFlocking_SendGoal", SwarmFlocking_SendGoalTypeSupport)
 }
 
-type _SwarmFlocking_SendGoalTypeSupport struct{}
+type _SwarmFlocking_SendGoalTypeSupport struct {}
 
 func (s _SwarmFlocking_SendGoalTypeSupport) Request() humble.MessageTypeSupport {
 	return SwarmFlocking_SendGoal_RequestTypeSupport
@@ -87,7 +87,7 @@ type SwarmFlocking_SendGoalService struct {
 func NewSwarmFlocking_SendGoalService(node *humble.Node, name string, options *humble.ServiceOptions, handler SwarmFlocking_SendGoalServiceRequestHandler) (*SwarmFlocking_SendGoalService, error) {
 	h := func(rmw *humble.ServiceInfo, msg humble.Message, rs humble.ServiceResponseSender) {
 		m := msg.(*SwarmFlocking_SendGoal_Request)
-		responseSender := SwarmFlocking_SendGoalServiceResponseSender{sender: rs}
+		responseSender := SwarmFlocking_SendGoalServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, SwarmFlocking_SendGoalTypeSupport, options, h)

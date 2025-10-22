@@ -21,7 +21,7 @@ func init() {
 	humble.RegisterService("rosbag2_interfaces/srv/Burst", BurstTypeSupport)
 }
 
-type _BurstTypeSupport struct{}
+type _BurstTypeSupport struct {}
 
 func (s _BurstTypeSupport) Request() humble.MessageTypeSupport {
 	return Burst_RequestTypeSupport
@@ -87,7 +87,7 @@ type BurstService struct {
 func NewBurstService(node *humble.Node, name string, options *humble.ServiceOptions, handler BurstServiceRequestHandler) (*BurstService, error) {
 	h := func(rmw *humble.ServiceInfo, msg humble.Message, rs humble.ServiceResponseSender) {
 		m := msg.(*Burst_Request)
-		responseSender := BurstServiceResponseSender{sender: rs}
+		responseSender := BurstServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, BurstTypeSupport, options, h)

@@ -24,7 +24,7 @@ func init() {
 	humble.RegisterAction("as2_msgs/action/PointGimbal", PointGimbalTypeSupport)
 }
 
-type _PointGimbalTypeSupport struct{}
+type _PointGimbalTypeSupport struct {}
 
 func (s _PointGimbalTypeSupport) Goal() humble.MessageTypeSupport {
 	return PointGimbal_GoalTypeSupport
@@ -100,7 +100,7 @@ func (s *PointGimbalFeedbackSender) Send(msg *PointGimbal_Feedback) error {
 	return s.sender.Send(msg)
 }
 
-type PointGimbalGoalHandle struct {
+type PointGimbalGoalHandle struct{
 	*humble.GoalHandle
 
 	Description *PointGimbal_Goal
@@ -147,7 +147,7 @@ func (a _PointGimbalAction) TypeSupport() humble.ActionTypeSupport {
 	return PointGimbalTypeSupport
 }
 
-type PointGimbalServer struct {
+type PointGimbalServer struct{
 	*humble.ActionServer
 }
 
@@ -163,7 +163,7 @@ type PointGimbalFeedbackHandler func(context.Context, *PointGimbal_FeedbackMessa
 
 type PointGimbalStatusHandler func(context.Context, *action_msgs_msg.GoalStatus)
 
-type PointGimbalClient struct {
+type PointGimbalClient struct{
 	*humble.ActionClient
 }
 

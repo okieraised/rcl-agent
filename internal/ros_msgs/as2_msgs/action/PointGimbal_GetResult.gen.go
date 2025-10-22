@@ -21,7 +21,7 @@ func init() {
 	humble.RegisterService("as2_msgs/action/PointGimbal_GetResult", PointGimbal_GetResultTypeSupport)
 }
 
-type _PointGimbal_GetResultTypeSupport struct{}
+type _PointGimbal_GetResultTypeSupport struct {}
 
 func (s _PointGimbal_GetResultTypeSupport) Request() humble.MessageTypeSupport {
 	return PointGimbal_GetResult_RequestTypeSupport
@@ -87,7 +87,7 @@ type PointGimbal_GetResultService struct {
 func NewPointGimbal_GetResultService(node *humble.Node, name string, options *humble.ServiceOptions, handler PointGimbal_GetResultServiceRequestHandler) (*PointGimbal_GetResultService, error) {
 	h := func(rmw *humble.ServiceInfo, msg humble.Message, rs humble.ServiceResponseSender) {
 		m := msg.(*PointGimbal_GetResult_Request)
-		responseSender := PointGimbal_GetResultServiceResponseSender{sender: rs}
+		responseSender := PointGimbal_GetResultServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, PointGimbal_GetResultTypeSupport, options, h)

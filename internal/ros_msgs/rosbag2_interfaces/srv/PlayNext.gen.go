@@ -21,7 +21,7 @@ func init() {
 	humble.RegisterService("rosbag2_interfaces/srv/PlayNext", PlayNextTypeSupport)
 }
 
-type _PlayNextTypeSupport struct{}
+type _PlayNextTypeSupport struct {}
 
 func (s _PlayNextTypeSupport) Request() humble.MessageTypeSupport {
 	return PlayNext_RequestTypeSupport
@@ -87,7 +87,7 @@ type PlayNextService struct {
 func NewPlayNextService(node *humble.Node, name string, options *humble.ServiceOptions, handler PlayNextServiceRequestHandler) (*PlayNextService, error) {
 	h := func(rmw *humble.ServiceInfo, msg humble.Message, rs humble.ServiceResponseSender) {
 		m := msg.(*PlayNext_Request)
-		responseSender := PlayNextServiceResponseSender{sender: rs}
+		responseSender := PlayNextServiceResponseSender{sender: rs} 
 		handler(rmw, m, responseSender)
 	}
 	service, err := node.NewService(name, PlayNextTypeSupport, options, h)
