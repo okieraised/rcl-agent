@@ -1,6 +1,6 @@
 TAG ?= latest
 IMAGE_NAME ?= monitoring-agent
-REGISTRY ?= localhost:5000/homelab
+REGISTRY ?= registry.homelab.io/agent
 DOCKER_IMAGE := $(REGISTRY)/$(IMAGE_NAME):$(TAG)
 
 .PHONY: build push test test-cover compile

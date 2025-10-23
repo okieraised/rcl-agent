@@ -1,0 +1,13 @@
+services:
+  agent:
+    container_name: monitoring_agent
+    image: registry.homelab.io/agent/monitoring-agent:latest
+    restart: always
+    network_mode: "host"
+    environment:
+      - FASTRTPS_DEFAULT_PROFILES_FILE=/opt/app/fastdds_profile.xml
+    volumes:
+      - ./.env:/opt/app/.env
+      - ./fastdds_profile.xml:/opt/app/fastdds_profile.xml
+    extra_hosts:
+      - "minio.homelab.io:192.168.1.45"
