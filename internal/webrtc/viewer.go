@@ -95,27 +95,28 @@ func (w *WebRTCDaemon) Start() error {
 			return token.Error()
 		}
 	} else { // Revert to websocket
-		var conn *websocket.Conn
-		var err error
-		for {
-			dialer := websocket.Dialer{}
-			conn, _, err = dialer.Dial(fmt.Sprintf("ws://localhost:%d/ws", getHTTPPort()), nil)
-			if err != nil {
-				wErr := errors.Wrapf(err, "failed to connect to websocket hub")
-				log.Default().Info(wErr.Error())
-				time.Sleep(1 * time.Second)
-				continue
-			} else {
-				log.Default().Info("Successfully connected WebRTC daemon to websocket hub")
-				break
-			}
-		}
-
-		client := signaling.NewWebsocketClient(w.id, conn, w.hub)
-		client.SetMessageHandler(w.websocketHandler)
-		w.hub.GetRegister() <- client
-		go client.Read()
-		w.cWebsocket = client
+		//var conn *websocket.Conn
+		//var err error
+		//for {
+		//	dialer := websocket.Dialer{}
+		//	conn, _, err = dialer.Dial(fmt.Sprintf("ws://localhost:%d/ws", getHTTPPort()), nil)
+		//	if err != nil {
+		//		wErr := errors.Wrapf(err, "failed to connect to websocket hub")
+		//		log.Default().Info(wErr.Error())
+		//		time.Sleep(1 * time.Second)
+		//		continue
+		//	} else {
+		//		log.Default().Info("Successfully connected WebRTC daemon to websocket hub")
+		//		break
+		//	}
+		//}
+		//
+		//client := signaling.NewWebsocketClient(w.id, conn, w.hub)
+		//client.SetMessageHandler(w.websocketHandler)
+		//w.hub.GetRegister() <- client
+		//go client.Read()
+		//w.cWebsocket = client
+		go w.websocketReconnectLoop(ctx)
 	}
 
 	for {
@@ -125,6 +126,52 @@ func (w *WebRTCDaemon) Start() error {
 			return nil
 		}
 	}
+}
+
+func (w *WebRTCDaemon) websocketReconnectLoop(ctx context.Context) {
+	backoff := 1 * time.Second
+	for {
+		select {
+		case <-ctx.Done():
+			return
+		default:
+		}
+
+		if err := w.connectWebsocketOnce(ctx); err != nil {
+			log.Default().Info(errors.Wrap(err, "websocket connection failed").Error())
+			time.Sleep(backoff)
+			continue
+		}
+
+		// Wait until the client signals closure or context is cancelled
+		select {
+		case <-ctx.Done():
+			return
+		case <-w.cWebsocket.Closed():
+			log.Default().Info("WebSocket disconnected; reconnecting")
+			time.Sleep(backoff)
+		}
+	}
+}
+
+func (w *WebRTCDaemon) connectWebsocketOnce(ctx context.Context) error {
+	dialer := websocket.Dialer{}
+	url := fmt.Sprintf("ws://localhost:%d/ws", getHTTPPort())
+
+	conn, _, err := dialer.Dial(url, nil)
+	if err != nil {
+		return errors.Wrap(err, "failed to dial websocket hub")
+	}
+
+	client := signaling.NewWebsocketClient(w.id, conn, w.hub)
+	client.SetMessageHandler(w.websocketHandler)
+
+	// Register and start pumps
+	w.hub.GetRegister() <- client
+	go client.Read()
+	w.cWebsocket = client
+	log.Default().Info("Connected WebRTC daemon to WebSocket hub")
+	return nil
 }
 
 func (w *WebRTCDaemon) messageHandler(payload common.SignalingMessage) {

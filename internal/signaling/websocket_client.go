@@ -29,6 +29,7 @@ type WebsocketClient struct {
 	hub     *WebsocketHub
 	writeMu sync.Mutex
 	closed  chan struct{}
+	once    sync.Once
 }
 
 // NewWebsocketClient creates a new websocket client
@@ -60,10 +61,17 @@ func (c *WebsocketClient) Send(msg common.SignalingMessage) {
 }
 
 func (c *WebsocketClient) Read() {
+	defer c.markClosed()
 	defer func() {
-		c.hub.unregister <- c
+		if c.hub != nil {
+			c.hub.unregister <- c
+		}
 		_ = c.Conn.Close()
 	}()
+	//defer func() {
+	//	c.hub.unregister <- c
+	//	_ = c.Conn.Close()
+	//}()
 
 	c.Conn.SetReadLimit(maxMessageSize)
 	err := c.Conn.SetReadDeadline(time.Now().Add(pongWait))
@@ -98,6 +106,13 @@ func (c *WebsocketClient) Read() {
 }
 
 func (c *WebsocketClient) Write() {
+	// added
+	defer c.markClosed()
+	ticker := time.NewTicker(pingPeriod)
+	defer func() {
+		ticker.Stop()
+		_ = c.Conn.Close()
+	}()
 
 	for {
 		select {
@@ -117,7 +132,14 @@ func (c *WebsocketClient) Write() {
 			if err := c.WriteJSON(message); err != nil {
 				log.Default().Info(errors.Wrap(err, "failed to send message").Error())
 				return
+			} // Added
+		case <-ticker.C:
+			if err := c.safeWrite(websocket.PingMessage, nil); err != nil {
+				log.Default().Info(errors.Wrap(err, "failed to send ping").Error())
+				return
 			}
+		case <-c.closed:
+			return
 		}
 	}
 }
@@ -162,13 +184,45 @@ func (c *WebsocketClient) pingLoop() {
 	}
 }
 
-func (c *WebsocketClient) Close() {
-	select {
-	case <-c.closed:
-		return
-	default:
+// Original
+//func (c *WebsocketClient) Close() {
+//	select {
+//	case <-c.closed:
+//		return
+//	default:
+//		close(c.closed)
+//		close(c.send)
+//		_ = c.Conn.Close()
+//	}
+//}
+
+//	func (c *WebsocketClient) Close() {
+//		select {
+//		case <-c.closed:
+//		default:
+//			close(c.closed)
+//			close(c.send)
+//		}
+//		_ = c.Conn.Close()
+//	}
+//
+//	func (c *WebsocketClient) Closed() <-chan struct{} {
+//		return c.closed
+//	}
+func (c *WebsocketClient) markClosed() {
+	c.once.Do(func() {
+		log.Default().Info(fmt.Sprintf("client [%s] is closing websocket connection", c.ID.String()))
 		close(c.closed)
-		close(c.send)
-		_ = c.Conn.Close()
-	}
+	})
+}
+
+func (c *WebsocketClient) Closed() <-chan struct{} {
+	return c.closed
+}
+
+func (c *WebsocketClient) Close() {
+	c.markClosed()
+	_ = c.Conn.Close()
+	close(c.send)
+	log.Default().Info(fmt.Sprintf("client [%s] is closed", c.ID.String()))
 }
