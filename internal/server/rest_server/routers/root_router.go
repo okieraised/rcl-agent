@@ -21,11 +21,11 @@ func (rr *RootRouter) InitRouters(engine *gin.Engine) {
 	rootAPIRouter := engine.Group("/api")
 	v1Router := rootAPIRouter.Group("/v1")
 	{
-		webRTCRouter := restful.NewWebRTCRouter(rr.appState.GetV1RestState().GetWebRTCService())
-		webRTCRouter.Routes(v1Router)
-
 		healthcheckRouter := restful.NewHealthcheckRouter(rr.appState.GetV1RestState().GetHealthcheckService())
 		healthcheckRouter.Routes(v1Router)
+
+		rosRouter := restful.NewROSRouter(rr.appState.GetV1RestState().GetROSService())
+		rosRouter.Routes(v1Router)
 	}
 
 	// websocket

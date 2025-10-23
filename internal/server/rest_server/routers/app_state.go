@@ -7,19 +7,11 @@ import (
 
 type V1Rest struct {
 	healthcheck *restful.HealthcheckService
-	webrtc      *restful.WebRTCService
+	ros         *restful.ROSService
 }
 
 func NewV1RestState() *V1Rest {
 	return &V1Rest{}
-}
-
-func (svc *V1Rest) SetWebRTCService(webrtc *restful.WebRTCService) {
-	svc.webrtc = webrtc
-}
-
-func (svc *V1Rest) GetWebRTCService() *restful.WebRTCService {
-	return svc.webrtc
 }
 
 func (svc *V1Rest) SetHealthcheckService(healthcheck *restful.HealthcheckService) {
@@ -28,6 +20,14 @@ func (svc *V1Rest) SetHealthcheckService(healthcheck *restful.HealthcheckService
 
 func (svc *V1Rest) GetHealthcheckService() *restful.HealthcheckService {
 	return svc.healthcheck
+}
+
+func (svc *V1Rest) SetROSService(ros *restful.ROSService) {
+	svc.ros = ros
+}
+
+func (svc *V1Rest) GetROSService() *restful.ROSService {
+	return svc.ros
 }
 
 type Websocket struct {

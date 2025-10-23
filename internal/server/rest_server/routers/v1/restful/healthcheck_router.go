@@ -42,9 +42,10 @@ func (r *HealthcheckRouter) healthcheck(ctx *gin.Context) {
 	defer span.End()
 
 	resp := api_response.New[any](ctx)
-	r.logger.With(
+	lg := r.logger.With(
 		zap.String(constants.APIFieldRequestID, ctx.GetString(constants.APIFieldRequestID)),
-	).Info("Received new healthcheck request")
+	)
+	lg.Info("Received new healthcheck request")
 
 	_, cSpan := r.tracer.Start(rootCtx, "handler")
 	result, appErr := r.svc.Healthcheck(ctx, &restful.HealthcheckInput{
@@ -53,12 +54,14 @@ func (r *HealthcheckRouter) healthcheck(ctx *gin.Context) {
 	})
 	if appErr != nil {
 		cSpan.End()
-		r.logger.Error(appErr.Error())
+		lg.Error(appErr.Error())
 		resp.Populate(appErr.Code, appErr.Message, nil, nil, nil)
 		ctx.JSON(http.StatusInternalServerError, resp)
 		return
 	}
 	cSpan.End()
+
+	lg.Info("Healthcheck completed")
 
 	resp.Populate(result.Code, result.Message, result.Data, nil, nil)
 	ctx.JSON(http.StatusOK, resp)

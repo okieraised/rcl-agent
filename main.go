@@ -271,6 +271,7 @@ func main() {
 	g.Go(func() error {
 		gErr := grpc_server.NewGRPCServer(ctx, func(s *grpc.Server) {
 			grpc_routes.RegisterROSInterfaceServer(s, &services.ROSInterfaceService{})
+			grpc_routes.RegisterRobotActionInterfaceServer(s, &services.RobotActionService{})
 		})
 		if gErr != nil {
 			return gErr
@@ -297,14 +298,16 @@ func main() {
 
 		// v1 restful svc
 		v1RestState := routers.NewV1RestState()
-		v1RestState.SetWebRTCService(
-			restful.NewWebRTCService(),
-		)
 		v1RestState.SetHealthcheckService(
 			restful.NewHealthcheckService(),
 		)
+		v1RestState.SetROSService(
+			restful.NewROSService(),
+		)
+
 		appState.SetV1RestState(v1RestState)
 
+		// Websocket service
 		websocketState := routers.NewWebsocketState()
 		websocketState.SetWebsocketService(
 			ws.NewWebsocketService(
